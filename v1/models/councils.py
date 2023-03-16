@@ -1,7 +1,7 @@
 import json
-from typing import Any
+from typing import Any, Optional
 
-from pydantic import BaseModel, Field, EmailStr, HttpUrl
+from pydantic import BaseModel, Field, EmailStr, HttpUrl, validator
 
 
 class ElectoralServices(BaseModel):
@@ -13,7 +13,7 @@ class ElectoralServices(BaseModel):
         ...,
         description="Postcode component of contact address for this council",
     )
-    email: EmailStr = Field(
+    email: Optional[EmailStr] = Field(
         ...,
         description="Contact email address for this council's Electoral Services team",
     )
@@ -31,6 +31,12 @@ class ElectoralServices(BaseModel):
         except AttributeError:
             return False
         return this_address == other_address
+
+    @validator('email', pre=True, always=False)
+    def validate_e(cls, val):
+        if val == "":
+            return None
+        return val
 
     @classmethod
     def from_ec_api(cls, json_data):
@@ -70,7 +76,7 @@ class Registration(BaseModel):
         ...,
         description="Postcode component of contact address for this council",
     )
-    email: EmailStr = Field(
+    email: Optional[EmailStr] = Field(
         ...,
         description="Contact email address for this council's Electoral Services team",
     )
@@ -79,6 +85,12 @@ class Registration(BaseModel):
         description="Telephone number for this council's Electoral Services team",
     )
     website: HttpUrl = Field(..., description="URL for this council's website")
+
+    @validator('email', pre=True, always=False)
+    def validate_e(cls, val):
+        if val == "":
+            return None
+        return val
 
     def __eq__(self, other: Any) -> bool:
         this_address = self.dict().get("address")
