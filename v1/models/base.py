@@ -26,11 +26,12 @@ class Notification(BaseModel):
     type: str = Field(
         default_factory=str, description="The type of notification"
     )
-    url: str = Field(
+    url: Optional[str] = Field(
         description=(
             "Details about this notification. This value should be shown "
             "to your users as a 'read more' link"
-        )
+        ),
+
     )
     title: str = Field(
         description=(
