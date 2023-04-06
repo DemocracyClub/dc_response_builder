@@ -21,7 +21,7 @@ class ElectoralServices(BaseModel):
         ...,
         description="Telephone number for this council's Electoral Services team",
     )
-    website: HttpUrl = Field(..., description="URL for this council's website")
+    website: Optional[HttpUrl] = Field(..., description="URL for this council's website")
 
     def __eq__(self, other: Any) -> bool:
         # TODO: Find a better way to do this, maybe by adding to the aggregator API?
@@ -36,6 +36,14 @@ class ElectoralServices(BaseModel):
     def validate_e(cls, val):
         if val == "":
             return None
+        return val
+
+    @validator('website', pre=True, always=False)
+    def validate_website(cls, val: str):
+        if not val:
+            return ""
+        if not val.startswith("http"):
+            return f"https://{val}"
         return val
 
     @classmethod
@@ -84,12 +92,20 @@ class Registration(BaseModel):
         ...,
         description="Telephone number for this council's Electoral Services team",
     )
-    website: HttpUrl = Field(..., description="URL for this council's website")
+    website: Optional[HttpUrl] = Field(..., description="URL for this council's website")
 
     @validator('email', pre=True, always=False)
     def validate_e(cls, val):
         if val == "":
             return None
+        return val
+
+    @validator('website', pre=True, always=False)
+    def validate_website(cls, val: str):
+        if not val:
+            return ""
+        if not val.startswith("http"):
+            return f"https://{val}"
         return val
 
     def __eq__(self, other: Any) -> bool:
