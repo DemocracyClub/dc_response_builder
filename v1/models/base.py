@@ -54,6 +54,7 @@ class Party(BaseModel):
 
 class Person(BaseModel):
     name: str = Field()
+    ynr_id: int = Field()
 
 
 class PreviousParty(BaseModel):
