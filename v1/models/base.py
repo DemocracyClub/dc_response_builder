@@ -67,8 +67,8 @@ class Person(BaseModel):
     name: str = Field()
     ynr_id: int = Field()
     absolute_url: HttpUrl = Field()
-    email: EmailStr = Field()
-    photo_url: HttpUrl = Field()
+    email: Optional[EmailStr] = Field()
+    photo_url: Optional[HttpUrl] = Field()
     leaflets: Optional[List[Leaflet]]
 
 
