@@ -90,11 +90,11 @@ class VotingSystem(BaseModel):
 
 class Husting(BaseModel):
     title: str = Field()
-    url: HttpUrl = Field()
-    starts: str = Field()
-    ends: str = Field()
-    location: str = Field()
-    postevent_url: HttpUrl = Field()
+    url: Optional[HttpUrl] = Field()
+    starts: Optional[str] = Field()
+    ends: Optional[str] = Field()
+    location: Optional[str] = Field()
+    postevent_url: Optional[HttpUrl] = Field()
 
 
 class Ballot(BaseModel):
