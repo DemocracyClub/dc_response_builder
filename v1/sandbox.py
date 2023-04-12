@@ -1,7 +1,9 @@
 SANDBOX_BASE_URL = "https://developers.democracyclub.org.uk/"
 SANDBOX_POSTCODES = {
     "AA11AA": {"description": "No upcoming ballots"},
-    "AA12AA": {"description": "One upcoming ballot, station known, with candidates"},
+    "AA12AA": {
+        "description": "One upcoming ballot, station known, with candidates"
+    },
     "AA12AB": {
         "description": "One upcoming ballot, station not known, with candidates"
     },

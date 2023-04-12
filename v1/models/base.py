@@ -1,14 +1,20 @@
 import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel, Field, HttpUrl, validator, root_validator, EmailStr
-from uk_election_ids.election_ids import IdBuilder
-
-from response_builder.v1.models.polling_stations import (
-    PollingStation,
-    AdvanceVotingStation,
+from pydantic import (
+    BaseModel,
+    EmailStr,
+    Field,
+    HttpUrl,
+    root_validator,
+    validator,
 )
 from response_builder.v1.models.councils import ElectoralServices, Registration
+from response_builder.v1.models.polling_stations import (
+    AdvanceVotingStation,
+    PollingStation,
+)
+from uk_election_ids.election_ids import IdBuilder
 
 
 class Address(BaseModel):
@@ -23,7 +29,9 @@ class Address(BaseModel):
 
 
 class Notification(BaseModel):
-    type: str = Field(default_factory=str, description="The type of notification")
+    type: str = Field(
+        default_factory=str, description="The type of notification"
+    )
     url: Optional[str] = Field(
         description=(
             "Details about this notification. This value should be shown "
@@ -117,7 +125,9 @@ class Ballot(BaseModel):
 
 
 class Date(BaseModel):
-    date: str = Field(default_factory=str, description="An ISO formatted date string")
+    date: str = Field(
+        default_factory=str, description="An ISO formatted date string"
+    )
     polling_station: PollingStation = Field(
         default_factory=PollingStation,
         description="Information about the polling station for this date",
@@ -181,9 +191,8 @@ class RootModel(BaseModel):
 
     @root_validator
     def not_address_picker_and_dates(cls, values):
-        if values.get("address_picker") is True:
-            if values.get("dates"):
-                raise ValueError("Can't add dates when address_picker=True")
+        if values.get("address_picker") is True and values.get("dates"):
+            raise ValueError("Can't add dates when address_picker=True")
         return values
 
     @classmethod

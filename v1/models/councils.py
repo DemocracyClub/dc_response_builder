@@ -1,7 +1,7 @@
 import json
 from typing import Any, Optional
 
-from pydantic import BaseModel, Field, EmailStr, HttpUrl, validator
+from pydantic import BaseModel, EmailStr, Field, HttpUrl, validator
 
 
 class ElectoralServices(BaseModel):

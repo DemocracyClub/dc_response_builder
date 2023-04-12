@@ -1,10 +1,9 @@
 from unittest import mock
 
 from faker import Faker
-
 from response_builder.v1.factories.faker_providers import (
-    make_ward_name,
     UKCouncilNamesProvider,
+    make_ward_name,
 )
 
 

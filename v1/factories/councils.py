@@ -1,8 +1,7 @@
 from faker import Faker
 from pydantic_factories import ModelFactory
-
 from response_builder.v1.factories.faker_providers import UKCouncilNamesProvider
-from response_builder.v1.models.councils import Registration, ElectoralServices
+from response_builder.v1.models.councils import ElectoralServices, Registration
 
 faker: Faker = Faker("en_GB")
 faker.add_provider(UKCouncilNamesProvider)

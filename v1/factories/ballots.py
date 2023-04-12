@@ -1,6 +1,5 @@
 from response_builder.v1.factories.base import (
     BaseModelFactory,
-    MethodFactoryField,
     FakerFactoryField,
     LiteralFactoryField,
 )

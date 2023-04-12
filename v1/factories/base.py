@@ -1,10 +1,9 @@
 from datetime import date
-from typing import TypeVar, Generic, Optional
+from typing import Generic, Optional, TypeVar
 
 from faker import Faker
 from pydantic import BaseModel, HttpUrl
 from pydantic.main import ModelMetaclass
-
 from response_builder.v1.models.base import RootModel
 
 FactoryTypes = BaseModel
@@ -38,11 +37,12 @@ class BaseModelFactory(Generic[T]):
             return self.faker.date_this_decade()
         if field_data.type_ == HttpUrl:
             return self.faker.url()
+        return None
 
     def populate_faker_fields(self, fields, skip):
         faked_fields = {}
         for field_name, field_data in fields.items():
-            if not field_name in skip:
+            if field_name not in skip:
                 faked_fields[field_name] = self.fake_single_field(field_data)
         return faked_fields
 
@@ -59,7 +59,9 @@ class BaseModelFactory(Generic[T]):
                 value = attr_obj.build(self, attr)
                 kwargs[attr] = value
             elif isinstance(attr_obj, ModelMetaclass):
-                raise ValueError("models must be instantiated on the Factory class")
+                raise ValueError(
+                    "models must be instantiated on the Factory class"
+                )
             elif isinstance(attr_obj, type(self)):
                 value = attr_obj.build()
             elif isinstance(attr_obj, BaseModel):

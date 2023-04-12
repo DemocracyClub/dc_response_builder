@@ -2,7 +2,6 @@ from typing import Optional
 
 from faker import Faker
 from pydantic import BaseModel
-
 from response_builder.v1.factories.ballots import LocalElectionBallotFactory
 from response_builder.v1.factories.base import (
     BaseModelFactory,
@@ -10,7 +9,7 @@ from response_builder.v1.factories.base import (
 )
 from response_builder.v1.factories.candidates import CandidateFactory
 from response_builder.v1.factories.councils import ElectoralServicesFactory
-from response_builder.v1.models.base import Date, Ballot
+from response_builder.v1.models.base import Ballot, Date
 from response_builder.v1.models.councils import ElectoralServices
 
 
@@ -38,7 +37,9 @@ class RootBuilder(AbstractBuilder):
         self.factory.address_picker = True
         return self
 
-    def with_date(self, date: Optional[str] = None, date_model: Optional[Date] = None):
+    def with_date(
+        self, date: Optional[str] = None, date_model: Optional[Date] = None
+    ):
         if all([date, date_model]):
             raise ValueError("Either specify `date` or `date_model`, not both.")
         if date:

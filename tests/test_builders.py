@@ -1,7 +1,5 @@
-from response_builder.v1.builders import RootBuilder, LocalBallotBuilder
-from response_builder.v1.factories.ballots import LocalElectionBallotFactory
+from response_builder.v1.builders import LocalBallotBuilder, RootBuilder
 from response_builder.v1.factories.councils import NuneatonElectoralServices
-from response_builder.v1.models.base import Ballot
 
 
 def test_builder():

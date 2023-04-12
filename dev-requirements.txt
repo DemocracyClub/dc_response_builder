@@ -1,0 +1,5 @@
+pytest==7.3.0
+pydantic_factories==1.17.3
+Faker==18.4.0
+ruff
+.

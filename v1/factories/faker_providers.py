@@ -824,9 +824,8 @@ def make_ward_name(add_extra_name=True):
     if rand > 35 and rand < 37 and add_extra_name:
         name = f"{name}-with-{make_ward_name(add_extra_name=False)}"
 
-    if add_extra_name:
-        if rand > 20 and rand < 30:
-            name = f"{name} & {make_ward_name(add_extra_name=False)}"
+    if add_extra_name and rand > 20 and rand < 30:
+        name = f"{name} & {make_ward_name(add_extra_name=False)}"
 
     return name
 
@@ -834,8 +833,7 @@ def make_ward_name(add_extra_name=True):
 def make_org_name():
     pre = get_sample(org_prefixes)
     suf = get_sample(org_suffixes)
-    name = "".join((pre, suf))
-    return name
+    return "".join((pre, suf))
 
 
 class UKCouncilNamesProvider(GBAddressProvider):
@@ -888,7 +886,9 @@ class LocalBallotDataProvider(GenericBallotDataProvider):
         return f"local.{slugify(self.organisation_name())}.{slugify(self.ward_name())}.{self.poll_open_date()}"
 
     def local_election_id(self):
-        return f"local.{slugify(self.organisation_name())}.{self.poll_open_date()}"
+        return (
+            f"local.{slugify(self.organisation_name())}.{self.poll_open_date()}"
+        )
 
     def local_ballot_title(self):
         return f"{self.local_election_name()} {self.ward_name()} ward"

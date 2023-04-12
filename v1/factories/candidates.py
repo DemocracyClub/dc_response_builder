@@ -1,13 +1,11 @@
-from response_builder.v1.factories.faker_providers import (
-    UKCouncilNamesProvider,
-    PoliticalPartyProvider,
-)
-from response_builder.v1.factories.ballots import LocalElectionBallotFactory
 from response_builder.v1.factories.base import (
     BaseModelFactory,
     FakerFactoryField,
 )
-from response_builder.v1.models.base import Candidate, Person, Party
+from response_builder.v1.factories.faker_providers import (
+    PoliticalPartyProvider,
+)
+from response_builder.v1.models.base import Candidate, Party, Person
 
 
 class PersonFactory(BaseModelFactory):

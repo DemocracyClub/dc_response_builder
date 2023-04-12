@@ -15,10 +15,9 @@ into fixtures. Being in this file also means they're auto-loaded in tests.
 """
 
 from pydantic_factories.plugins.pytest_plugin import register_fixture
-
 from response_builder.v1.factories.councils import (
-    RegistrationFactory,
     ElectoralServicesFactory,
+    RegistrationFactory,
 )
 
 

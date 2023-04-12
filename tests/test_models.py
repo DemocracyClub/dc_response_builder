@@ -1,7 +1,7 @@
 import json
 
 from response_builder.v1.models.base import Date, RootModel
-from response_builder.v1.models.councils import Registration, ElectoralServices
+from response_builder.v1.models.councils import ElectoralServices, Registration
 
 
 def test_electoral_services_eq_registration(
