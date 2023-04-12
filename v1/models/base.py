@@ -23,15 +23,12 @@ class Address(BaseModel):
 
 
 class Notification(BaseModel):
-    type: str = Field(
-        default_factory=str, description="The type of notification"
-    )
+    type: str = Field(default_factory=str, description="The type of notification")
     url: Optional[str] = Field(
         description=(
             "Details about this notification. This value should be shown "
             "to your users as a 'read more' link"
         ),
-
     )
     title: str = Field(
         description=(
@@ -46,10 +43,12 @@ class Notification(BaseModel):
         )
     )
 
+
 class Leaflet(BaseModel):
     leaflet_id: int = Field()
     thumb_url: HttpUrl = Field()
     leaflet_url: HttpUrl = Field()
+
 
 class Party(BaseModel):
     party_name: str = Field()
@@ -62,8 +61,7 @@ class Person(BaseModel):
     absolute_url: HttpUrl = Field()
     email: EmailStr = Field()
     photo_url: HttpUrl = Field()
-    leaflets:Optional[List[Leaflet]]
-
+    leaflets: Optional[List[Leaflet]]
 
 
 class PreviousParty(BaseModel):
@@ -78,11 +76,17 @@ class Candidate(BaseModel):
 
 
 class VotingSystem(BaseModel):
-    pass
+    slug: str = Field()
+    name: str = Field()
 
 
 class Husting(BaseModel):
-    pass
+    title: str = Field()
+    url: HttpUrl = Field()
+    starts: str = Field()
+    ends: str = Field()
+    location: str = Field()
+    postevent_url: HttpUrl = Field()
 
 
 class Ballot(BaseModel):
@@ -113,9 +117,7 @@ class Ballot(BaseModel):
 
 
 class Date(BaseModel):
-    date: str = Field(
-        default_factory=str, description="An ISO formatted date string"
-    )
+    date: str = Field(default_factory=str, description="An ISO formatted date string")
     polling_station: PollingStation = Field(
         default_factory=PollingStation,
         description="Information about the polling station for this date",

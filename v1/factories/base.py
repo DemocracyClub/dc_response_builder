@@ -59,9 +59,7 @@ class BaseModelFactory(Generic[T]):
                 value = attr_obj.build(self, attr)
                 kwargs[attr] = value
             elif isinstance(attr_obj, ModelMetaclass):
-                raise ValueError(
-                    "models must be instantiated on the Factory class"
-                )
+                raise ValueError("models must be instantiated on the Factory class")
             elif isinstance(attr_obj, type(self)):
                 value = attr_obj.build()
             elif isinstance(attr_obj, BaseModel):

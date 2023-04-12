@@ -888,9 +888,7 @@ class LocalBallotDataProvider(GenericBallotDataProvider):
         return f"local.{slugify(self.organisation_name())}.{slugify(self.ward_name())}.{self.poll_open_date()}"
 
     def local_election_id(self):
-        return (
-            f"local.{slugify(self.organisation_name())}.{self.poll_open_date()}"
-        )
+        return f"local.{slugify(self.organisation_name())}.{self.poll_open_date()}"
 
     def local_ballot_title(self):
         return f"{self.local_election_name()} {self.ward_name()} ward"
