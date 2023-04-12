@@ -1,6 +1,7 @@
 import datetime
 from typing import List, Optional
 
+from email_validator import validate_email
 from pydantic import (
     BaseModel,
     EmailStr,
@@ -71,6 +72,14 @@ class Person(BaseModel):
     photo_url: Optional[HttpUrl] = Field()
     leaflets: Optional[List[Leaflet]]
 
+    @validator("email", pre=True)
+    def validate_email(cls, value):
+        if not value:
+            return
+        try:
+            validate_email(value)
+        except ValueError:
+            return None
 
 class PreviousParty(BaseModel):
     ...
@@ -90,11 +99,11 @@ class VotingSystem(BaseModel):
 
 class Husting(BaseModel):
     title: str = Field()
-    url: Optional[HttpUrl] = Field()
+    url: Optional[str] = Field()
     starts: Optional[str] = Field()
     ends: Optional[str] = Field()
     location: Optional[str] = Field()
-    postevent_url: Optional[HttpUrl] = Field()
+    postevent_url: Optional[str] = Field(min_length=0)
 
 
 class Ballot(BaseModel):
