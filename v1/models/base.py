@@ -1,7 +1,7 @@
 import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel, Field, HttpUrl, validator, root_validator
+from pydantic import BaseModel, Field, HttpUrl, validator, root_validator, EmailStr
 from uk_election_ids.election_ids import IdBuilder
 
 from response_builder.v1.models.polling_stations import (
@@ -46,6 +46,10 @@ class Notification(BaseModel):
         )
     )
 
+class Leaflet(BaseModel):
+    leaflet_id: int = Field()
+    thumb_url: HttpUrl = Field()
+    leaflet_url: HttpUrl = Field()
 
 class Party(BaseModel):
     party_name: str = Field()
@@ -55,6 +59,11 @@ class Party(BaseModel):
 class Person(BaseModel):
     name: str = Field()
     ynr_id: int = Field()
+    absolute_url: HttpUrl = Field()
+    email: EmailStr = Field()
+    photo_url: HttpUrl = Field()
+    leaflets:Optional[List[Leaflet]]
+
 
 
 class PreviousParty(BaseModel):
