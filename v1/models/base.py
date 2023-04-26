@@ -55,8 +55,8 @@ class Notification(BaseModel):
 
 class Leaflet(BaseModel):
     leaflet_id: int = Field()
-    thumb_url: HttpUrl = Field()
-    leaflet_url: HttpUrl = Field()
+    thumb_url: Optional[HttpUrl] = Field()
+    leaflet_url: Optional[HttpUrl] = Field()
 
 
 class Party(BaseModel):
@@ -80,6 +80,7 @@ class Person(BaseModel):
             validate_email(value)
         except ValueError:
             return None
+        return value
 
 class PreviousParty(BaseModel):
     ...
