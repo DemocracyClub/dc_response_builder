@@ -4,9 +4,7 @@ from response_builder.v1.models.base import Date, RootModel
 from response_builder.v1.models.councils import ElectoralServices, Registration
 
 
-def test_electoral_services_eq_registration(
-    electoral_services_factory, registration_factory
-):
+def test_electoral_services_eq_registration():
     kwargs = {
         "council_id": "ABC",
         "name": "Council",
@@ -36,8 +34,6 @@ def test_root_model():
     model = RootModel()
 
     model.dates = [Date(date="2021-05-04")]
-    # print(model.json())
-    # print(model.schema_json(indent=4))
 
     data = """
     {
