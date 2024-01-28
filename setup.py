@@ -10,7 +10,7 @@ setup(
     author_email="sym.roe@democracyclub.org.uk",
     setup_requires=["wheel"],
     packages=["response_builder"],
-    package_dir={"response_builder": "."},
-    package_data={"response_builder": ["v1/*", "v1/**/*"]},
+    package_dir={"response_builder": "response_builder"},
+    package_data={"response_builder": ["response_builder/v1/*", "response_builder/v1/**/*"]},
     install_requires=["uk-election-ids==0.8.0", "pydantic[email]>=1.10,<2"],
 )
