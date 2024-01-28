@@ -2,12 +2,10 @@ from typing import Optional
 
 from faker import Faker
 from pydantic import BaseModel
-from response_builder.v1.factories.ballots import LocalElectionBallotFactory
 from response_builder.v1.factories.base import (
     BaseModelFactory,
     RootModelFactory,
 )
-from response_builder.v1.factories.candidates import CandidateFactory
 from response_builder.v1.factories.councils import ElectoralServicesFactory
 from response_builder.v1.models.base import Ballot, Date
 from response_builder.v1.models.councils import ElectoralServices
@@ -38,7 +36,7 @@ class RootBuilder(AbstractBuilder):
         return self
 
     def with_date(
-        self, date: Optional[str] = None, date_model: Optional[Date] = None
+            self, date: Optional[str] = None, date_model: Optional[Date] = None
     ):
         if all([date, date_model]):
             raise ValueError("Either specify `date` or `date_model`, not both.")
@@ -63,26 +61,3 @@ class RootBuilder(AbstractBuilder):
 
     def build(self):
         return self.factory.__model__
-
-
-class BallotBuilder(AbstractBuilder):
-    pass
-
-
-class LocalBallotBuilder(BallotBuilder):
-    factory: Ballot = LocalElectionBallotFactory
-
-    def with_candidates(self, count, verified=False):
-        self.factory.candidates_verified = verified
-        self.factory.seats_contested = 1
-        for i in range(count):
-            self.with_candidate()
-        return self
-
-    def with_candidate(self, candidate=None, **kwargs):
-        if not candidate:
-            candidate = CandidateFactory().build(**kwargs)
-        if not hasattr(self.factory, "candidates"):
-            self.factory.candidates = []
-        self.factory.candidates.append(candidate)
-        return self
