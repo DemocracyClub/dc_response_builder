@@ -10,12 +10,13 @@ from pydantic import (
     root_validator,
     validator,
 )
+from uk_election_ids.election_ids import IdBuilder
+
 from response_builder.v1.models.councils import ElectoralServices, Registration
 from response_builder.v1.models.polling_stations import (
     AdvanceVotingStation,
     PollingStation,
 )
-from uk_election_ids.election_ids import IdBuilder
 
 
 class Address(BaseModel):
@@ -75,12 +76,13 @@ class Person(BaseModel):
     @validator("email", pre=True)
     def validate_email(cls, value):
         if not value:
-            return
+            return None
         try:
             validate_email(value)
         except ValueError:
             return None
         return value
+
 
 class PreviousParty(BaseModel):
     ...
@@ -132,6 +134,9 @@ class Ballot(BaseModel):
         if not election_id.ballot_id == value:
             raise ValueError("Not a valid ballot_paper_id")
         return value
+
+    class Config:
+        validate_assignment = True
 
 
 class Date(BaseModel):
