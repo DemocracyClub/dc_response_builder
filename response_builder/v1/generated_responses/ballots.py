@@ -1,3 +1,3 @@
-from response_builder.v1.builders import LocalBallotBuilder  # noqa
+from response_builder.v1.builders.ballots import LocalBallotBuilder, StockLocalBallotBuilder  # noqa
 
-SINGLE_LOCAL_BALLOT = LocalBallotBuilder().with_candidates(1, verified=False)
+SINGLE_LOCAL_BALLOT = StockLocalBallotBuilder()

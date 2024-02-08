@@ -1,63 +1,81 @@
-from typing import Optional
+from typing import Generic, Optional, Type, TypeVar
 
-from faker import Faker
-from pydantic import BaseModel
-from response_builder.v1.factories.base import (
-    BaseModelFactory,
-    RootModelFactory,
-)
-from response_builder.v1.factories.councils import ElectoralServicesFactory
-from response_builder.v1.models.base import Ballot, Date
+from pydantic import BaseModel, ValidationError
+
+from response_builder.v1.models.base import Ballot, Date, RootModel
 from response_builder.v1.models.councils import ElectoralServices
+from response_builder.v1.models.polling_stations import PollingStation
+
+ModelType = TypeVar("ModelType", bound=BaseModel)
 
 
-class AbstractBuilder:
-    model: Optional[BaseModel] = None
-    factory: BaseModelFactory = None
+class AbstractBuilder(Generic[ModelType]):
+    model_class: Optional[Type[BaseModel]] = None
 
-    def __init__(self, model=None, **kwargs):
+    def __init__(self, **kwargs):
         self.kwargs = kwargs
-        self._factory = self.factory()
+        self._values = {}
 
-    def build(self, **kwargs) -> BaseModel:
-        return self._factory.build(**kwargs)
-
-
-class RootBuilder(AbstractBuilder):
-    factory = RootModelFactory
-
-    def __init__(self):
-        super().__init__()
-        self.faker = Faker()
-        self.factory.electoral_services = ElectoralServicesFactory().build()
-
-    def with_address_picker(self):
-        self.factory.address_picker = True
+    def set(self, key, value):
+        if key not in self.model_class.__fields__:
+            raise ValueError(
+                f'"{key}" is not a valid attribute name for "{self.model_class.__name__}".'
+            )
+        known_field = self.model_class.__fields__[key]
+        dict_without_original_value = {
+            k: v for k, v in self.model_class.__dict__.items() if k != key
+        }
+        value, error_ = known_field.validate(
+            value,
+            dict_without_original_value,
+            loc=key,
+            cls=self.model_class.__class__,
+        )
+        if error_:
+            raise ValidationError([error_], self.__class__)
+        self._values[key] = value
         return self
 
-    def with_date(
-            self, date: Optional[str] = None, date_model: Optional[Date] = None
-    ):
-        if all([date, date_model]):
-            raise ValueError("Either specify `date` or `date_model`, not both.")
-        if date:
-            date_model = Date(date=date)
+    def build(self, **kwargs) -> ModelType:
+        return self.model_class(**self._values)
 
-        self.factory.__model__.dates.append(date_model)
+
+class RootBuilder(AbstractBuilder[RootModel]):
+    model_class = RootModel
+
+    def with_address_picker(self):
+        self.set("address_picker", True)
+        self._values.pop("dates", None)
+        return self
+
+    def with_date(self, date_model: Optional[Date] = None):
+        if "dates" not in self._values:
+            self._values["dates"] = []
+        existing_dates = self._values["dates"]
+        existing_dates.append(date_model)
+        self.set("dates", existing_dates)
         return self
 
     def with_ballot(self, ballot_model: Ballot):
-        ballot_date = ballot_model.ballot_paper_id.split(".")[-1]
-        if ballot_date not in self.factory.__model__.dates:
-            self.with_date(ballot_date)
-        for date_model in self.factory.__model__.dates:
-            if date_model.date == ballot_date:
-                date_model.ballots.append(ballot_model)
+        """
+        Convince class for adding a ballot inside a date object.
+
+        The date of the ballot is added to the dates array
+        """
+        if self._values.get("address_picker"):
+            return self
+        ballot_date = ballot_model.poll_open_date
+        date_model = Date(date=str(ballot_date))
+        date_model.ballots.append(ballot_model)
+        self.with_date(date_model)
+        return self
 
     def with_electoral_services(self, electoral_services: ElectoralServices):
-        self.factory.__model__.electoral_services = electoral_services
-        if not self.factory.__model__.registration:
-            self.factory.registration = electoral_services
+        self.set("electoral_services", electoral_services)
 
-    def build(self):
-        return self.factory.__model__
+    def with_polling_station(self, polling_station: PollingStation):
+        if not self._values["dates"]:
+            raise ValueError("Can't add polling station with no dates")
+        date = self._values["dates"][0]
+        date.polling_station = polling_station
+        return self

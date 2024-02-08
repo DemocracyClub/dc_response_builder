@@ -149,6 +149,9 @@ class Ballot(BaseModel):
             raise ValueError("Not a valid ballot_paper_id")
         return value
 
+    class Config:
+        validate_assignment = True
+
 
 class Date(BaseModel):
     date: str = Field(
