@@ -72,6 +72,7 @@ class RootBuilder(AbstractBuilder[RootModel]):
 
     def with_electoral_services(self, electoral_services: ElectoralServices):
         self.set("electoral_services", electoral_services)
+        return self
 
     def with_polling_station(self, polling_station: PollingStation):
         if not self._values["dates"]:

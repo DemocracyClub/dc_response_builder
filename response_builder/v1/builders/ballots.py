@@ -62,8 +62,8 @@ class StockLocalBallotBuilder(LocalBallotBuilder):
         self.with_post_name("Stroud Slade")
         self.with_election_name("Stroud local elections")
         self.with_voting_system("FPTP")
-        self.with_ballot_paper_id("local.stroud.slade.2019-01-01")
-        self.with_election_id("local.stroud.2019-01-01")
+        self.with_ballot_paper_id("local.stroud.slade.2024-02-20")
+        self.with_election_id("local.stroud.2024-02-28")
 
     def with_division(self, param):
         return self
