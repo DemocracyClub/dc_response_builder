@@ -11,7 +11,12 @@ class BallotBuilder(AbstractBuilder[Ballot]):
         parts = ballot_paper_id.split(".")
         date = parts[-1]
         self.with_date(date)
+        if "pcc" in ballot_paper_id:
+            organisation = parts[1]
+            self.with_organisation(organisation)
         self.set("ballot_paper_id", ballot_paper_id)
+        
+
         self.set(
             "wcivf_url",
             f"https://whocanivotefor.co.uk/elections/{ballot_paper_id}",
@@ -48,7 +53,6 @@ class BallotBuilder(AbstractBuilder[Ballot]):
         self.set("election_id", election_id)
         return self
 
-
 class LocalBallotBuilder(BallotBuilder):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -66,4 +70,7 @@ class StockLocalBallotBuilder(LocalBallotBuilder):
         self.with_election_id("local.stroud.2024-02-28")
 
     def with_division(self, param):
+        return self
+
+    def with_organisation(self, param):
         return self

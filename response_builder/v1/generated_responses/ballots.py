@@ -1,18 +1,8 @@
-from response_builder.v1.builders.ballots import BallotBuilder, StockLocalBallotBuilder  # noqa
+from response_builder.v1.builders.ballots import BallotBuilder, ParlBallotBuilder, StockLocalBallotBuilder  # noqa
 
 LOCAL_BALLOT = StockLocalBallotBuilder()
-PARL_BALLOT = BallotBuilder()
-NIA_BALLOT = BallotBuilder()  
-EUROPARL_BALLOT = BallotBuilder() 
-NAW_BALLOT = BallotBuilder() 
-NAW_C_BALLOT = BallotBuilder() 
-NAW_R_BALLOT = BallotBuilder() 
-SENEDD_BALLOT = BallotBuilder()
-SENEDD_C_BALLOT = BallotBuilder()
-SENEDD_R_BALLOT = BallotBuilder() 
-SP_C_BALLOT = BallotBuilder()
-SP_R_BALLOT = BallotBuilder() 
-SP_BALLOT = BallotBuilder()  
+PARL_BALLOT = ParlBallotBuilder()
+
 GLA_BALLOT = BallotBuilder() 
 GLA_C_BALLOT = BallotBuilder()
 GLA_A_BALLOT = BallotBuilder()
