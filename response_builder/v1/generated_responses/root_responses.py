@@ -136,4 +136,52 @@ MAYORAL_BALLOT = RootBuilder().with_ballot(
         nation="England",
         phone="020 8871 6023",
         postcode="SW118DD",
-        website="https://www.wandsworth.gov.uk"))
+        website="https://www.wandsworth.gov.uk")).with_voting_system("FPTP")
+
+AMS_BALLOT = RootBuilder().with_ballot(
+    StockLocalBallotBuilder().build()).with_electoral_services(
+    ElectoralServices(
+        council_id="WND",
+        name="Wandsworth Council",
+        address="The Town Hall, Wandsworth High Street",
+        email="",  #
+        nation="England",
+        phone="020 8871 6023",
+        postcode="SW118DD",
+        website="https://www.wandsworth.gov.uk")).with_voting_system("AMS")
+
+FPTP_BALLOT = RootBuilder().with_ballot(
+    StockLocalBallotBuilder().build()).with_electoral_services(
+    ElectoralServices(
+        council_id="WND",
+        name="Wandsworth Council",
+        address="The Town Hall, Wandsworth High Street",
+        email="",  #
+        nation="England",
+        phone="020 8871 6023",
+        postcode="SW118DD",
+        website="https://www.wandsworth.gov.uk")).with_voting_system("FPTP")
+
+STV_BALLOT = RootBuilder().with_ballot(
+    StockLocalBallotBuilder().build()).with_electoral_services(
+    ElectoralServices(
+        council_id="WND",
+        name="Wandsworth Council",
+        address="The Town Hall, Wandsworth High Street",
+        email="",  #
+        nation="England",
+        phone="020 8871 6023",
+        postcode="SW118DD",
+        website="https://www.wandsworth.gov.uk")).with_voting_system("STV")
+    
+CANCELLED_BALLOT = RootBuilder().with_ballot(
+    StockLocalBallotBuilder().build()).with_electoral_services(
+    ElectoralServices(
+        council_id="WND",
+        name="Wandsworth Council",
+        address="The Town Hall, Wandsworth High Street",
+        email="",  #
+        nation="England",
+        phone="020 8871 6023",
+        postcode="SW118DD",
+        website="https://www.wandsworth.gov.uk")).with_voting_system("FPTP").cancelled(True)

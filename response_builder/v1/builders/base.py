@@ -87,4 +87,25 @@ class RootBuilder(AbstractBuilder[RootModel]):
         date = self._values["dates"][0]
         date.polling_station = PollingStation() 
         return self
+    
+    def with_cancelled(self):
+        if not self._values["dates"]:
+            raise ValueError("Can't cancel a ballot with no dates")
+        ballot = self._values["dates"][0].ballots[0]
+        ballot.cancelled = True    
+        # This needs a notification update, 
+        # but there is a conflict between 
+        # expectations of list vs dict
+        return self
+         
+        if not self._values["dates"]:
+            raise ValueError("Can't set a voting_system on a ballot with no dates")
+        date = self._values["dates"][0]
+         
+        for ballot in date.ballots:
+        #     election_id = ballot.ballot_paper_id
+        #     nation = "ENG" 
+        #     voting_system = VotingSystemMatcher(election_id, nation).get_voting_system()
+            voting_system = VotingSystem(name=VOTING_SYSTEMS[voting_system]["name"], slug=voting_system)
+            self.set("voting_system", voting_system)
         return self
