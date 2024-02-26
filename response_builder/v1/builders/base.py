@@ -80,3 +80,11 @@ class RootBuilder(AbstractBuilder[RootModel]):
         date = self._values["dates"][0]
         date.polling_station = polling_station
         return self
+    
+    def without_polling_station(self):
+        if not self._values["dates"]:
+            raise ValueError("Can't add polling station with no dates")
+        date = self._values["dates"][0]
+        date.polling_station = PollingStation() 
+        return self
+        return self
