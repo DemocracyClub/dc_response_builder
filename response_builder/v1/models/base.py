@@ -124,7 +124,7 @@ class Ballot(BaseModel):
     candidates_verified: bool = Field(default=False)
     candidates: List[Candidate] = Field(default_factory=list)
     wcivf_url: HttpUrl = Field()
-    voting_system: VotingSystem = Field()
+    voting_system: VotingSystem = Field(default=None)
     seats_contested: int = Field(default=1)
     hustings: Optional[List[Husting]] = Field(default=None)
 
@@ -203,6 +203,11 @@ class RootModel(BaseModel):
         details can be used for electoral registration related enquiries.""",
         nullable=True,
     )
+    voting_system: Optional[VotingSystem] = Field(
+        default_factory=None,
+        description="The voting system used for the election",
+        nullable=True,
+    ) 
 
     @root_validator
     def not_address_picker_and_dates(cls, values):
