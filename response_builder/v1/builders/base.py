@@ -1,8 +1,16 @@
 from typing import Generic, Optional, Type, TypeVar
 
 from pydantic import BaseModel, ValidationError
+from uk_election_ids.metadata_tools import VotingSystemMatcher
+from uk_election_ids.datapackage import VOTING_SYSTEMS
 
-from response_builder.v1.models.base import Ballot, Date, RootModel
+
+from response_builder.v1.models.base import (
+    Ballot,
+    Date,
+    RootModel,
+    VotingSystem,
+)
 from response_builder.v1.models.councils import ElectoralServices
 from response_builder.v1.models.polling_stations import PollingStation
 
@@ -69,6 +77,10 @@ class RootBuilder(AbstractBuilder[RootModel]):
         date_model.ballots.append(ballot_model)
         self.with_date(date_model)
         return self
+    
+    def without_ballot(self):
+        self._values.pop("dates", None)
+        return self
 
     def with_electoral_services(self, electoral_services: ElectoralServices):
         self.set("electoral_services", electoral_services)
@@ -98,14 +110,14 @@ class RootBuilder(AbstractBuilder[RootModel]):
         # expectations of list vs dict
         return self
          
+    def with_voting_system(self, voting_system: str, nation: str = "England"):
         if not self._values["dates"]:
             raise ValueError("Can't set a voting_system on a ballot with no dates")
         date = self._values["dates"][0]
-         
         for ballot in date.ballots:
-        #     election_id = ballot.ballot_paper_id
-        #     nation = "ENG" 
-        #     voting_system = VotingSystemMatcher(election_id, nation).get_voting_system()
+            election_id = ballot.ballot_paper_id
+            nation = "ENG" 
+            voting_system = VotingSystemMatcher(election_id, nation).get_voting_system()
             voting_system = VotingSystem(name=VOTING_SYSTEMS[voting_system]["name"], slug=voting_system)
             self.set("voting_system", voting_system)
         return self
