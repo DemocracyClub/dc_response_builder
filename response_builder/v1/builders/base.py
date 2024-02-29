@@ -10,6 +10,7 @@ from response_builder.v1.models.base import (
     Date,
     RootModel,
     VotingSystem,
+    Address,
 )
 from response_builder.v1.models.councils import ElectoralServices
 from response_builder.v1.models.polling_stations import PollingStation
@@ -53,7 +54,31 @@ class RootBuilder(AbstractBuilder[RootModel]):
 
     def with_address_picker(self):
         self.set("address_picker", True)
+        self.set("addresses", [])
+
         self._values.pop("dates", None)
+
+        address1 = Address(
+            address="1 Foo Street",
+            postcode="AA1 1AA",
+            slug="10035187881",
+            url="https://foo-street",
+        )
+        address2 = Address(
+            address="2 Bar Street",
+            postcode="AA1 1AB",
+            slug="10035187882",
+            url="https://bar-street",
+        )
+        address3 = Address(
+            address="3 Baz Street",
+            postcode="AA1 1AC",
+            slug="10035187883",
+            url="https://baz-street",
+        )
+        self._values["addresses"].append(address1)
+        self._values["addresses"].append(address2)
+        self._values["addresses"].append(address3)
         return self
 
     def with_date(self, date_model: Optional[Date] = None):
