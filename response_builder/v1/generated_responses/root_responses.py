@@ -64,9 +64,8 @@ SINGLE_LOCAL_FUTURE_BALLOT_WITHOUT_POLLING_STATION = RootBuilder().with_ballot(
         phone="123456",
         postcode="GL51AA",
         website="https://stroud.gov.uk"))
-
-PARL_BALLOT = RootBuilder().with_ballot(
-    ParlBallotBuilder().build()).with_electoral_services(
+    
+SINGLE_LOCAL_FUTURE_BALLOT_WITH_ADDRESS_PICKER = RootBuilder().with_ballot(LOCAL).with_address_picker().with_electoral_services(
     ElectoralServices(
         council_id="STO",
         name="Stroud Council",
