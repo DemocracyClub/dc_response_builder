@@ -78,9 +78,8 @@ PARL_BALLOT = RootBuilder().with_ballot(
         website="https://stroud.gov.uk"))
 
 
-    
-LONDON_ASSEMBLY_BALLOT = RootBuilder().with_ballot(
-    StockLocalBallotBuilder().build()).with_electoral_services(
+MULTIPLE_BALLOTS_WITH_VOTING_SYSTEM_AND_POLLING_STATION = RootBuilder().with_multiple_ballots(
+    [MAYORAL, GLA]).with_voting_system("FPTP").with_polling_station(POLLING_STATION).with_electoral_services(
     ElectoralServices(
         council_id="WND",
         name="Wandsworth Council",
@@ -90,6 +89,12 @@ LONDON_ASSEMBLY_BALLOT = RootBuilder().with_ballot(
         phone="020 8871 6023",
         postcode="SW118DD",
         website="https://www.wandsworth.gov.uk"))
+   
+# TO DO: The cancelled ballot is not rendering the expected cancellation 
+# message in the template
+MULTIPLE_BALLOTS_WITH_CANCELLATION = RootBuilder().with_multiple_ballots(
+    [MAYORAL, PARL, GLA, RootBuilder().with_ballot(LOCAL).with_cancelled().build()])
+
 PARL_BALLOT = RootBuilder().with_ballot(
     PARL).with_polling_station(POLLING_STATION).with_electoral_services(
     ElectoralServices(

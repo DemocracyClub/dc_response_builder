@@ -78,6 +78,16 @@ class RootBuilder(AbstractBuilder[RootModel]):
         self.with_date(date_model)
         return self
     
+    def with_multiple_ballots(self, ballot_models: list[Ballot]):
+        for ballot in ballot_models:
+            # there may be a cancellation and this will fail
+            try: 
+                self.with_ballot(ballot)
+            except Exception as e:
+                print(e)
+                continue
+        return self
+    
     def without_ballot(self):
         self._values.pop("dates", None)
         return self
