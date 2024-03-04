@@ -42,54 +42,83 @@ CANCELLED_BALLOT = RootBuilder().with_ballot(StockLocalBallotBuilder().build()).
 
 # LOCAL_BALLOT_WITH_ID_REQUIREMENTS = RootBuilder().with_ballot(StockLocalBallotBuilder().build()).with_id_requirements()
 
-SINGLE_LOCAL_FUTURE_BALLOT_WITH_POLLING_STATION = RootBuilder().with_ballot(StockLocalBallotBuilder().build()).with_polling_station(POLLING_STATION).with_electoral_services(
-    ElectoralServices(
-        council_id="STO",
-        name="Stroud Council",
-        address="123 Stroud Street",
-        email="electoralservices@stroud.gov.uk",
-        nation="England",
-        phone="123456",
-        postcode="GL51AA",
-        website="https://stroud.gov.uk"))
+SINGLE_LOCAL_FUTURE_BALLOT_WITH_POLLING_STATION = (
+    RootBuilder()
+    .with_ballot(StockLocalBallotBuilder().build())
+    .with_candidates()
+    .with_polling_station(POLLING_STATION)
+    .with_electoral_services(
+        ElectoralServices(
+            council_id="STO",
+            name="Stroud Council",
+            address="123 Stroud Street",
+            email="electoralservices@stroud.gov.uk",
+            nation="England",
+            phone="123456",
+            postcode="GL51AA",
+            website="https://stroud.gov.uk",
+        )
+    )
+)
 
-SINGLE_LOCAL_FUTURE_BALLOT_WITHOUT_POLLING_STATION = RootBuilder().with_ballot(
-    StockLocalBallotBuilder().build()).without_polling_station().with_electoral_services(
-    ElectoralServices(
-        council_id="STO",
-        name="Stroud Council",
-        address="123 Stroud Street",
-        email="electoralservices@stroud.gov.uk",
-        nation="England",
-        phone="123456",
-        postcode="GL51AA",
-        website="https://stroud.gov.uk"))
-    
-SINGLE_LOCAL_FUTURE_BALLOT_WITH_ADDRESS_PICKER = RootBuilder().with_ballot(LOCAL).with_address_picker().with_electoral_services(
-    ElectoralServices(
-        council_id="STO",
-        name="Stroud Council",
-        address="123 Stroud Street",
-        email="",  #
-        nation="England",
-        phone="123456",
-        postcode="GL51AA",
-        website="https://stroud.gov.uk"))
+SINGLE_LOCAL_FUTURE_BALLOT_WITHOUT_POLLING_STATION = (
+    RootBuilder()
+    .with_ballot(StockLocalBallotBuilder().build())
+    .with_candidates()
+    .without_polling_station()
+    .with_electoral_services(
+        ElectoralServices(
+            council_id="STO",
+            name="Stroud Council",
+            address="123 Stroud Street",
+            email="electoralservices@stroud.gov.uk",
+            nation="England",
+            phone="123456",
+            postcode="GL51AA",
+            website="https://stroud.gov.uk",
+        )
+    )
+)
+
+SINGLE_LOCAL_FUTURE_BALLOT_WITH_ADDRESS_PICKER = (
+    RootBuilder()
+    .with_ballot(LOCAL)
+    .with_candidates()
+    .with_address_picker()
+    .with_electoral_services(
+        ElectoralServices(
+            council_id="STO",
+            name="Stroud Council",
+            address="123 Stroud Street",
+            email="",  #
+            nation="England",
+            phone="123456",
+            postcode="GL51AA",
+            website="https://stroud.gov.uk",
+        )
+    )
+)
 
 
-MULTIPLE_BALLOTS_WITH_VOTING_SYSTEM_AND_POLLING_STATION = RootBuilder().with_multiple_ballots(
-    [MAYORAL, GLA]).with_voting_system("FPTP").with_polling_station(POLLING_STATION).with_electoral_services(
-    ElectoralServices(
-        council_id="WND",
-        name="Wandsworth Council",
-        address="The Town Hall, Wandsworth High Street",
-        email="",  #
-        nation="England",
-        phone="020 8871 6023",
-        postcode="SW118DD",
-        website="https://www.wandsworth.gov.uk"))
-   
-# TO DO: The cancelled ballot is not rendering the expected cancellation 
+MULTIPLE_BALLOTS_WITH_VOTING_SYSTEM_AND_POLLING_STATION = (
+    RootBuilder()
+    .with_multiple_ballots([MAYORAL, GLA])
+    .with_candidates()
+    .with_voting_system("FPTP")
+    .with_polling_station(POLLING_STATION)
+    .with_electoral_services(
+        ElectoralServices(
+            council_id="WND",
+            name="Wandsworth Council",
+            address="The Town Hall, Wandsworth High Street",
+            email="",  #
+            nation="England",
+            phone="020 8871 6023",
+            postcode="SW118DD",
+            website="https://www.wandsworth.gov.uk",
+        )
+    )
+)
 # message in the template
 MULTIPLE_BALLOTS_WITH_CANCELLATION = RootBuilder().with_multiple_ballots(
     [MAYORAL, PARL, GLA, RootBuilder().with_ballot(LOCAL).with_cancelled().build()])
