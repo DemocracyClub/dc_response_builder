@@ -42,6 +42,15 @@ CANCELLED_BALLOT = RootBuilder().with_ballot(StockLocalBallotBuilder().build()).
 
 # LOCAL_BALLOT_WITH_ID_REQUIREMENTS = RootBuilder().with_ballot(StockLocalBallotBuilder().build()).with_id_requirements()
 
+RECENTLY_PASSED_LOCAL_BALLOT = (
+    RootBuilder()
+    .with_ballot(StockLocalBallotBuilder(
+        poll_open_date="2024-03-01",
+        ballot_paper_id="local.stroud.2024-03-01",
+        
+    ).build())
+)
+
 SINGLE_LOCAL_FUTURE_BALLOT_WITH_POLLING_STATION = (
     RootBuilder()
     .with_ballot(StockLocalBallotBuilder().build())
@@ -183,4 +192,4 @@ CANCELLED_BALLOT = RootBuilder().with_ballot(
         nation="England",
         phone="020 8871 6023",
         postcode="SW118DD",
-        website="https://www.wandsworth.gov.uk")).with_voting_system("FPTP").cancelled(True)
+        website="https://www.wandsworth.gov.uk")).with_voting_system("FPTP").with_cancelled()
