@@ -2,7 +2,7 @@
 from response_builder.v1.builders.base import AbstractBuilder
 from response_builder.v1.models.base import Ballot
 
-
+REQUIRES_VOTER_ID = ["parl", "pcc", "mayor", "gla"]
 class BallotBuilder(AbstractBuilder[Ballot]):
     model_class = Ballot
 
@@ -10,6 +10,8 @@ class BallotBuilder(AbstractBuilder[Ballot]):
         parts = ballot_paper_id.split(".")
         date = parts[-1]
         self.with_date(date)
+        if any(election_type in ballot_paper_id for election_type in REQUIRES_VOTER_ID):
+            self.with_voter_id_requirements(True)
         if "pcc" in ballot_paper_id:
             organisation = parts[1]
             self.with_organisation(organisation)
@@ -26,6 +28,10 @@ class BallotBuilder(AbstractBuilder[Ballot]):
         )
         return self
 
+    def with_voter_id_requirements(self, requires_voter_id=False):
+        self.set("requires_voter_id", requires_voter_id)
+        return self
+    
     def with_date(self, date):
         self.set("poll_open_date", date)
         return self
