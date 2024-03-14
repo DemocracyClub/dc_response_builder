@@ -12,9 +12,7 @@ class BallotBuilder(AbstractBuilder[Ballot]):
         self.with_date(date)
         if any(election_type in ballot_paper_id for election_type in REQUIRES_VOTER_ID):
             self.with_voter_id_requirements(True)
-        if "pcc" in ballot_paper_id:
-            organisation = parts[1]
-            self.with_organisation(organisation)
+
         self.set("ballot_paper_id", ballot_paper_id)
         
 
@@ -65,11 +63,5 @@ class StockLocalBallotBuilder(LocalBallotBuilder):
         self.with_ballot_title("Stroud Slade local election")
         self.with_post_name("Stroud Slade")
         self.with_election_name("Stroud local elections")
-        self.with_ballot_paper_id("local.stroud.slade.2024-02-20")
-        self.with_election_id("local.stroud.2024-02-28")
-
-    def with_division(self, param):
-        return self
-
-    def with_organisation(self, param):
-        return self
+        self.with_ballot_paper_id("local.stroud.slade.2024-05-02")
+        self.with_election_id("local.stroud.2024-05-02")
