@@ -167,9 +167,9 @@ class RootBuilder(AbstractBuilder[RootModel]):
             raise ValueError("Can't set a voting_system on a ballot with no dates")
         date = self._values["dates"][0]
         for ballot in date.ballots:
-        #     election_id = ballot.ballot_paper_id
-        #     nation = "ENG" 
-        #     voting_system = VotingSystemMatcher(election_id, nation).get_voting_system()
+            election_id = ballot.ballot_paper_id
+            nation = "ENG" 
+            voting_system = VotingSystemMatcher(election_id, nation).get_voting_system()
             voting_system = VotingSystem(name=VOTING_SYSTEMS[voting_system]["name"], slug=voting_system)
             self.set("voting_system", voting_system)
         return self
