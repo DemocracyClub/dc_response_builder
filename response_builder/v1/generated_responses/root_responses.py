@@ -26,7 +26,7 @@ SV_VOTING_SYSTEM = RootBuilder().with_ballot(
 # < -- election types -- >
 LOCAL = StockLocalBallotBuilder().build()
 GLA = StockLocalBallotBuilder().with_ballot_title("London Assembly elections").with_post_name("London Assembly").with_election_name("London Assembly elections").with_ballot_paper_id("gla.a.2024-05-02").with_election_id("gla.a.2024-05-02").build()
-MAYORAL = StockLocalBallotBuilder().with_ballot_title("Mayor of London").with_post_name("Mayor of London").with_election_name("Mayor of London").with_ballot_paper_id("mayor.london.2024-05-02").with_election_id("mayor.london.2024-05-02").build()
+MAYORAL = StockLocalBallotBuilder().with_ballot_title("Mayor of London").with_post_name("Mayor of London").with_election_name("Mayor of London").with_ballot_paper_id("mayor.london.2024-11-02").with_election_id("mayor.london.2024-11-02").build()
 PCC = StockLocalBallotBuilder().with_ballot_title("Police and Crime Commissioner elections").with_post_name("Police and Crime Commissioner for Avon and Somerset").with_election_name("Police and Crime Commissioner election").with_ballot_paper_id("pcc.avon-and-somerset.2024-05-02").with_election_id("pcc.avon-and-somerset.2024-05-02").build()
 PARL = StockLocalBallotBuilder().with_ballot_title("Stroud Slade parliamentary by-election").with_post_name("Stroud Slade constituency").with_election_name("Stroud Slade constituency").with_ballot_paper_id("parl.stroud.2024-11-14").with_election_id("parl.stroud.2024-11-14").build()
 
@@ -35,8 +35,6 @@ NO_LOCAL_BALLOTS = RootBuilder().without_ballot()
 
 # This is a local ballot by default
 CANCELLED_BALLOT = RootBuilder().with_ballot(StockLocalBallotBuilder().build()).with_cancelled()
-
-# LOCAL_BALLOT_WITH_ID_REQUIREMENTS = RootBuilder().with_ballot(StockLocalBallotBuilder().build()).with_id_requirements()
 
 RECENTLY_PASSED_LOCAL_BALLOT = (
     RootBuilder()
@@ -79,6 +77,7 @@ MULTIPLE_BALLOTS_WITH_VOTING_SYSTEM_AND_POLLING_STATION = (
     .with_polling_station(POLLING_STATION)
     .with_electoral_services(electoral_services.stroud_electoral_services)
 )
+
 
 MULTIPLE_BALLOTS_WITH_CANCELLATION = RootBuilder().with_multiple_ballots(
     [MAYORAL, PARL, GLA, RootBuilder().with_ballot(LOCAL).with_cancelled().build()])
