@@ -78,7 +78,7 @@ class Person(BaseModel):
         if not value:
             return None
         try:
-            validate_email(value)
+            validate_email(value, check_deliverability=False)
         except ValueError:
             return None
         return value
