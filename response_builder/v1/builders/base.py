@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import Generic, Optional, Type, TypeVar, Union
+from typing import Generic, List, Optional, Type, TypeVar, Union
 
 from dateutil.parser import parse
 from pydantic import BaseModel, ValidationError
@@ -105,7 +105,7 @@ class RootBuilder(AbstractBuilder[RootModel]):
         self.with_date(date_model)
         return self
 
-    def with_multiple_ballots(self, ballot_models: list[Ballot]):
+    def with_multiple_ballots(self, ballot_models: List[Ballot]):
         for ballot in ballot_models:
             # there may be a cancellation and this will fail
             try:
@@ -119,7 +119,7 @@ class RootBuilder(AbstractBuilder[RootModel]):
         self._values.pop("dates", None)
         return self
 
-    def with_candidates(self, candidates=list[Candidate]):
+    def with_candidates(self, candidates=List[Candidate]):
         if not self._values["dates"]:
             raise ValueError("Can't add candidates with no dates")
 
