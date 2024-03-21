@@ -131,6 +131,7 @@ class RootBuilder(AbstractBuilder[RootModel]):
 
         date = self._values["dates"][0]
         for ballot in date.ballots:
+            ballot.candidates_verified = True
             ballot.candidates = candidates
         return self
 
