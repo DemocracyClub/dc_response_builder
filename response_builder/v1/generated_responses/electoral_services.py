@@ -1,7 +1,7 @@
 from response_builder.v1.models.councils import ElectoralServices
 
 
-stroud_electoral_services = ElectoralServices(
+wandsworth_electoral_services = ElectoralServices(
     council_id="WND",
     name="Wandsworth Council",
     address="The Town Hall, Wandsworth High Street",
@@ -12,7 +12,7 @@ stroud_electoral_services = ElectoralServices(
     website="https://www.wandsworth.gov.uk",
 )
 
-wandsworth_electoral_services = ElectoralServices(
+stroud_electoral_services = ElectoralServices(
     council_id="STO",
     name="Stroud Council",
     address="123 Stroud Street",
