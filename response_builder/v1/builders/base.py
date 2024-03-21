@@ -1,5 +1,7 @@
-from typing import Generic, Optional, Type, TypeVar
+from datetime import date, datetime
+from typing import Generic, Optional, Type, TypeVar, Union
 
+from dateutil.parser import parse
 from pydantic import BaseModel, ValidationError
 from uk_election_ids.metadata_tools import VotingSystemMatcher
 from uk_election_ids.datapackage import VOTING_SYSTEMS
@@ -173,4 +175,53 @@ class RootBuilder(AbstractBuilder[RootModel]):
             voting_system = VotingSystemMatcher(election_id, nation).get_voting_system()
             voting_system = VotingSystem(name=VOTING_SYSTEMS[voting_system]["name"], slug=voting_system)
             self.set("voting_system", voting_system)
+        return self
+
+    def set_date_baseline(self, new_date: Union[date, str]):
+        """
+        For dynamically updating dates of ballots.
+
+        Because it's useful to test responses at various points over an election timetable
+        we can set the dates for a response to any date.
+
+        The "baseline" is the first election date in self.dates. That is, the earliest election
+        we will see.
+
+        For example, if we have 3 upcoming elections in a response:
+
+        2018-05-03
+        2018-06-07
+        2018-06-21
+
+        and we called set_date_baseline(2022-01-02) the election dates would be changed to:
+
+        2022-01-02
+        2022-02-03
+        2022-02-17
+
+        """
+        if self._values.get("address_picker"):
+            return self
+
+        if isinstance(new_date, str):
+            new_date = parse(new_date).date()
+
+        if not self._values.get("dates", None):
+            print(self._values)
+            raise ValueError("No dates to change")
+
+        baseline = parse(self._values["dates"][0].date).date()
+        delta = new_date - baseline
+        for date_model in self._values["dates"]:
+            updated_date = (datetime.fromisoformat(date_model.date) + delta).date().isoformat()
+            date_model.date = updated_date
+            for ballot in date_model.ballots:
+                ballot.poll_open_date = updated_date
+                parts = ballot.ballot_paper_id.split(".")
+                parts[-1] = str(updated_date)
+                ballot.ballot_paper_id = ".".join(parts)
+
+                parts = ballot.election_id.split(".")
+                parts[-1] = str(updated_date)
+                ballot.election_id = ".".join(parts)
         return self
