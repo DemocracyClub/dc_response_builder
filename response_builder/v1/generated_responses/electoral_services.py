@@ -1,6 +1,5 @@
 from response_builder.v1.models.councils import ElectoralServices
 
-
 wandsworth_electoral_services = ElectoralServices(
     council_id="WND",
     name="Wandsworth Council",

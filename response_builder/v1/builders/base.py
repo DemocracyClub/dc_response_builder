@@ -3,24 +3,16 @@ from typing import Generic, Optional, Type, TypeVar, Union
 
 from dateutil.parser import parse
 from pydantic import BaseModel, ValidationError
-from uk_election_ids.metadata_tools import VotingSystemMatcher
 from uk_election_ids.datapackage import VOTING_SYSTEMS
-
+from uk_election_ids.metadata_tools import VotingSystemMatcher
 
 from response_builder.v1.models.base import (
+    Address,
     Ballot,
+    Candidate,
     Date,
     RootModel,
     VotingSystem,
-    Address,
-    Candidate,
-    Party,
-    Person,
-    Candidate,
-    Leaflet,
-    PreviousParty,
-    EmailStr,
-    PreviousParty,
 )
 from response_builder.v1.models.councils import ElectoralServices
 from response_builder.v1.models.polling_stations import PollingStation
@@ -112,22 +104,22 @@ class RootBuilder(AbstractBuilder[RootModel]):
         date_model.ballots.append(ballot_model)
         self.with_date(date_model)
         return self
-    
+
     def with_multiple_ballots(self, ballot_models: list[Ballot]):
         for ballot in ballot_models:
             # there may be a cancellation and this will fail
-            try: 
+            try:
                 self.with_ballot(ballot)
             except Exception as e:
                 print(e)
                 continue
         return self
-    
+
     def without_ballot(self):
         self._values.pop("dates", None)
         return self
 
-    def with_candidates(self, candidates = list[Candidate]):
+    def with_candidates(self, candidates=list[Candidate]):
         if not self._values["dates"]:
             raise ValueError("Can't add candidates with no dates")
 
@@ -147,33 +139,39 @@ class RootBuilder(AbstractBuilder[RootModel]):
         date = self._values["dates"][0]
         date.polling_station = polling_station
         return self
-    
+
     def without_polling_station(self):
         if not self._values["dates"]:
             raise ValueError("Can't add polling station with no dates")
         date = self._values["dates"][0]
-        date.polling_station = PollingStation() 
+        date.polling_station = PollingStation()
         return self
-    
+
     def with_cancelled(self):
         if not self._values["dates"]:
             raise ValueError("Can't cancel a ballot with no dates")
         ballot = self._values["dates"][0].ballots[0]
-        ballot.cancelled = True    
-        # This needs a notification update, 
-        # but there is a conflict between 
+        ballot.cancelled = True
+        # This needs a notification update,
+        # but there is a conflict between
         # expectations of list vs dict
         return self
-         
+
     def with_voting_system(self, voting_system: str, nation: str = "England"):
         if not self._values["dates"]:
-            raise ValueError("Can't set a voting_system on a ballot with no dates")
+            raise ValueError(
+                "Can't set a voting_system on a ballot with no dates"
+            )
         date = self._values["dates"][0]
         for ballot in date.ballots:
             election_id = ballot.ballot_paper_id
-            nation = "ENG" 
-            voting_system = VotingSystemMatcher(election_id, nation).get_voting_system()
-            voting_system = VotingSystem(name=VOTING_SYSTEMS[voting_system]["name"], slug=voting_system)
+            nation = "ENG"
+            voting_system = VotingSystemMatcher(
+                election_id, nation
+            ).get_voting_system()
+            voting_system = VotingSystem(
+                name=VOTING_SYSTEMS[voting_system]["name"], slug=voting_system
+            )
             self.set("voting_system", voting_system)
         return self
 
@@ -213,7 +211,11 @@ class RootBuilder(AbstractBuilder[RootModel]):
         baseline = parse(self._values["dates"][0].date).date()
         delta = new_date - baseline
         for date_model in self._values["dates"]:
-            updated_date = (datetime.fromisoformat(date_model.date) + delta).date().isoformat()
+            updated_date = (
+                (datetime.fromisoformat(date_model.date) + delta)
+                .date()
+                .isoformat()
+            )
             date_model.date = updated_date
             for ballot in date_model.ballots:
                 ballot.poll_open_date = updated_date

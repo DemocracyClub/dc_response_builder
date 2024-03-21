@@ -208,7 +208,7 @@ class RootModel(BaseModel):
         default_factory=None,
         description="The voting system used for the election",
         nullable=True,
-    ) 
+    )
 
     @root_validator
     def not_address_picker_and_dates(cls, values):

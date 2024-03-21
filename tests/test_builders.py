@@ -5,7 +5,7 @@ from uk_election_ids.datapackage import ELECTION_TYPES, VOTING_SYSTEMS
 
 from build.lib.response_builder.v1.sandbox import SANDBOX_POSTCODES
 from response_builder.v1.builders.ballots import StockLocalBallotBuilder
-from response_builder.v1.builders.base import RootBuilder, AbstractBuilder
+from response_builder.v1.builders.base import AbstractBuilder, RootBuilder
 from response_builder.v1.generated_responses.root_responses import (
     POLLING_STATION,
 )
@@ -65,7 +65,15 @@ def generate_expected_data():
     for election_type, data in ELECTION_TYPES.items():
         election_type = election_type.upper()
         for subtype in data.get("subtypes", []):
-            var_names.append("_".join([election_type, subtype["election_subtype"].upper(), "BALLOT"]))
+            var_names.append(
+                "_".join(
+                    [
+                        election_type,
+                        subtype["election_subtype"].upper(),
+                        "BALLOT",
+                    ]
+                )
+            )
         else:
             var_names.append("_".join([election_type, "BALLOT"]))
     all_data += [("ballots", var_name) for var_name in var_names]
@@ -85,7 +93,9 @@ def generate_expected_data():
 
 @pytest.mark.parametrize("package_name,var_name", generate_expected_data())
 def test_generated_responses_exist(package_name, var_name):
-    module = importlib.import_module(f"response_builder.v1.generated_responses.{package_name}")
+    module = importlib.import_module(
+        f"response_builder.v1.generated_responses.{package_name}"
+    )
     klass = getattr(module, var_name, None)
     assert klass
     assert isinstance(klass, AbstractBuilder)
