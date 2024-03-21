@@ -1,8 +1,9 @@
-
 from response_builder.v1.builders.base import AbstractBuilder
 from response_builder.v1.models.base import Ballot
 
 REQUIRES_VOTER_ID = ["parl", "pcc", "mayor", "gla"]
+
+
 class BallotBuilder(AbstractBuilder[Ballot]):
     model_class = Ballot
 
@@ -10,11 +11,13 @@ class BallotBuilder(AbstractBuilder[Ballot]):
         parts = ballot_paper_id.split(".")
         date = parts[-1]
         self.with_date(date)
-        if any(election_type in ballot_paper_id for election_type in REQUIRES_VOTER_ID):
+        if any(
+            election_type in ballot_paper_id
+            for election_type in REQUIRES_VOTER_ID
+        ):
             self.with_voter_id_requirements(True)
 
         self.set("ballot_paper_id", ballot_paper_id)
-        
 
         self.set(
             "wcivf_url",
@@ -29,11 +32,11 @@ class BallotBuilder(AbstractBuilder[Ballot]):
     def with_voter_id_requirements(self, requires_voter_id=False):
         self.set("requires_voter_id", requires_voter_id)
         return self
-    
+
     def with_date(self, date):
         self.set("poll_open_date", date)
         return self
-    
+
     def with_ballot_title(self, ballot_title):
         self.set("ballot_title", ballot_title)
         return self
@@ -49,7 +52,7 @@ class BallotBuilder(AbstractBuilder[Ballot]):
     def with_election_id(self, election_id):
         self.set("election_id", election_id)
         return self
-    
+
 
 class LocalBallotBuilder(BallotBuilder):
     def __init__(self, **kwargs):

@@ -1,15 +1,11 @@
-from response_builder.v1.models.base import Candidate
 from response_builder.v1.models.base import (
     Candidate,
+    EmailStr,
+    Leaflet,
     Party,
     Person,
-    Candidate,
-    Leaflet,
-    PreviousParty,
-    EmailStr,
     PreviousParty,
 )
-
 
 labour_candidate = Candidate(
     list_position=3,
@@ -124,31 +120,37 @@ green_candidate = Candidate(
 )
 
 ni_candidate = Candidate(
-	list_position=5,
-	party=Party(
-		party_name="Irish Republican Socialist Party",
-		party_id="PP14057",
-	),
-	person=Person(
-		name="Mr. Ni Irsp",
-		ynr_id=131415,
-		absolute_url="https://candidates.democracyclub.org.uk/person/131415",
-		email=EmailStr("ni@irsp.co.uk"),
-		photo_url="https://s3.eu-west-2.amazonaws.com/static-candidates.democracyclub.org.uk/media/cache/fc/131415/fc131415.jpg",
-		leaflets=[
-			Leaflet(
-				leaflet_id=456,
-				thumb_url="https://electionleaflets.org/leaflets/131415/",
-				leaflet_url="https://electionleaflets.org/leaflets/131415/",
-			)
-		],
-	),
-	previous_party_affiliations=PreviousParty(
-		name="Irish Republican Socialist Party"
-	),        
+    list_position=5,
+    party=Party(
+        party_name="Irish Republican Socialist Party",
+        party_id="PP14057",
+    ),
+    person=Person(
+        name="Mr. Ni Irsp",
+        ynr_id=131415,
+        absolute_url="https://candidates.democracyclub.org.uk/person/131415",
+        email=EmailStr("ni@irsp.co.uk"),
+        photo_url="https://s3.eu-west-2.amazonaws.com/static-candidates.democracyclub.org.uk/media/cache/fc/131415/fc131415.jpg",
+        leaflets=[
+            Leaflet(
+                leaflet_id=456,
+                thumb_url="https://electionleaflets.org/leaflets/131415/",
+                leaflet_url="https://electionleaflets.org/leaflets/131415/",
+            )
+        ],
+    ),
+    previous_party_affiliations=PreviousParty(
+        name="Irish Republican Socialist Party"
+    ),
 )
 
 # make a list of candidates
-all_candidates = [labour_candidate, conservative_candidate, libdem_candidate, green_candidate, ni_candidate]
-#make a list of just the labour candidate
+all_candidates = [
+    labour_candidate,
+    conservative_candidate,
+    libdem_candidate,
+    green_candidate,
+    ni_candidate,
+]
+# make a list of just the labour candidate
 labour_candidates = [labour_candidate]
