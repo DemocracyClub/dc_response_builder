@@ -204,11 +204,6 @@ class RootModel(BaseModel):
         details can be used for electoral registration related enquiries.""",
         nullable=True,
     )
-    voting_system: Optional[VotingSystem] = Field(
-        default_factory=None,
-        description="The voting system used for the election",
-        nullable=True,
-    )
 
     @root_validator
     def not_address_picker_and_dates(cls, values):
