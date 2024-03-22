@@ -1,4 +1,5 @@
 import datetime
+from enum import Enum
 from typing import List, Optional
 
 from email_validator import validate_email
@@ -10,12 +11,13 @@ from pydantic import (
     root_validator,
     validator,
 )
+from uk_election_ids.election_ids import IdBuilder
+
 from response_builder.v1.models.councils import ElectoralServices, Registration
 from response_builder.v1.models.polling_stations import (
     AdvanceVotingStation,
     PollingStation,
 )
-from uk_election_ids.election_ids import IdBuilder
 
 
 class Address(BaseModel):
@@ -75,15 +77,15 @@ class Person(BaseModel):
     @validator("email", pre=True)
     def validate_email(cls, value):
         if not value:
-            return
+            return None
         try:
-            validate_email(value)
+            validate_email(value, check_deliverability=False)
         except ValueError:
             return None
         return value
 
-class PreviousParty(BaseModel):
-    ...
+
+class PreviousParty(BaseModel): ...
 
 
 class Candidate(BaseModel):
@@ -107,6 +109,13 @@ class Husting(BaseModel):
     postevent_url: Optional[str] = Field(min_length=0)
 
 
+class CancellationReason(Enum):
+    NO_CANDIDATES = "NO_CANDIDATES"
+    EQUAL_CANDIDATES = "EQUAL_CANDIDATES"
+    UNDER_CONTESTED = "UNDER_CONTESTED"
+    CANDIDATE_DEATH = "CANDIDATE_DEATH"
+
+
 class Ballot(BaseModel):
     ballot_paper_id: str = Field()
     ballot_title: str = Field()
@@ -114,6 +123,7 @@ class Ballot(BaseModel):
     elected_role: str = Field()
     metadata: Optional[dict] = Field(default=None)
     cancelled: bool = Field(default=False)
+    cancellation_reason: Optional[CancellationReason] = Field()
     replaced_by: Optional[str] = Field()
     ballot_url: HttpUrl = Field()
     election_id: str = Field()
@@ -122,9 +132,10 @@ class Ballot(BaseModel):
     candidates_verified: bool = Field(default=False)
     candidates: List[Candidate] = Field(default_factory=list)
     wcivf_url: HttpUrl = Field()
-    voting_system: VotingSystem = Field()
+    voting_system: VotingSystem = Field(default=None)
     seats_contested: int = Field(default=1)
     hustings: Optional[List[Husting]] = Field(default=None)
+    requires_voter_id: Optional[str] = Field(default=False)
 
     @validator("ballot_paper_id")
     def validate_ballot_paper_id(cls, value):
@@ -132,6 +143,9 @@ class Ballot(BaseModel):
         if not election_id.ballot_id == value:
             raise ValueError("Not a valid ballot_paper_id")
         return value
+
+    class Config:
+        validate_assignment = True
 
 
 class Date(BaseModel):
