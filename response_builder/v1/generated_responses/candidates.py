@@ -7,7 +7,7 @@ from response_builder.v1.models.base import (
     PreviousParty,
 )
 
-labour_candidate = Candidate(
+LAB_CANDIDATE = Candidate(
     list_position=3,
     party=Party(
         party_name="Labour Party",
@@ -35,7 +35,7 @@ labour_candidate = Candidate(
     ),
 )
 
-conservative_candidate = Candidate(
+CON_CANDIDATE = Candidate(
     list_position=1,
     party=Party(
         party_name="Conservative Party",
@@ -63,7 +63,7 @@ conservative_candidate = Candidate(
     ),
 )
 
-libdem_candidate = Candidate(
+LIBDEM_CANDIDATE = Candidate(
     list_position=2,
     party=Party(
         party_name="Liberal Democrats Party",
@@ -91,7 +91,7 @@ libdem_candidate = Candidate(
     ),
 )
 
-green_candidate = Candidate(
+GREEN_CANDIDATE = Candidate(
     list_position=4,
     party=Party(
         party_name="Green Party",
@@ -117,6 +117,35 @@ green_candidate = Candidate(
         colour="green",
         url="https://greenparty.com",
     ),
+)
+
+INDEPENDENT_CANDIDATE = Candidate(
+    list_position=4,
+    party=Party(
+        party_name="Independent",
+        party_id="ynmp-party:2",
+    ),
+    person=Person(
+        name="Ms. Qux Baz",
+        ynr_id=101112,
+        absolute_url="https://candidates.democracyclub.org.uk/person/101112",
+        email=EmailStr("independent@example.com"),
+        photo_url="https://s3.eu-west-2.amazonaws.com/static-candidates.democracyclub.org.uk/media/cache/fc/101112/fc101112.jpg",
+    )
+)
+REFORM_CANDIDATE = Candidate(
+    list_position=4,
+    party=Party(
+        party_name="Reform",
+        party_id="PP7931",
+    ),
+    person=Person(
+        name="Ms. Qux Baz",
+        ynr_id=101112,
+        absolute_url="https://candidates.democracyclub.org.uk/person/101112",
+        email=EmailStr("independent@example.com"),
+        photo_url="https://s3.eu-west-2.amazonaws.com/static-candidates.democracyclub.org.uk/media/cache/fc/101112/fc101112.jpg",
+    )
 )
 
 ni_candidate = Candidate(
@@ -146,11 +175,11 @@ ni_candidate = Candidate(
 
 # make a list of candidates
 all_candidates = [
-    labour_candidate,
-    conservative_candidate,
-    libdem_candidate,
-    green_candidate,
+    LAB_CANDIDATE,
+    CON_CANDIDATE,
+    LIBDEM_CANDIDATE,
+    GREEN_CANDIDATE,
     ni_candidate,
 ]
 # make a list of just the labour candidate
-labour_candidates = [labour_candidate]
+labour_candidates = [LAB_CANDIDATE]

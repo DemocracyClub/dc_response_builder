@@ -1,5 +1,9 @@
+from typing import List
+
+from uk_election_ids.datapackage import VOTING_SYSTEMS
+
 from response_builder.v1.builders.base import AbstractBuilder
-from response_builder.v1.models.base import Ballot
+from response_builder.v1.models.base import Ballot, VotingSystem, Candidate
 
 REQUIRES_VOTER_ID = ["parl", "pcc", "mayor", "gla"]
 
@@ -53,11 +57,38 @@ class BallotBuilder(AbstractBuilder[Ballot]):
         self.set("election_id", election_id)
         return self
 
+    def with_voting_system(self, slug: str):
+        self.set(
+            "voting_system",
+            VotingSystem(name=VOTING_SYSTEMS[slug]["name"], slug=slug).dict()
+        )
+        return self
+
+    def with_candidates(self, candidates=List[Candidate]):
+        self.set("candidates_verified", True)
+        self.set("candidates", candidates)
+        return self
+
+    def cancelled(self):
+        self.set("cancelled", True)
+        return self
+
+    def with_cancellation_reason(self, reason):
+        self.set("cancellation_reason", reason)
+        return self.cancelled()
+
 
 class LocalBallotBuilder(BallotBuilder):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.set("elected_role", "Local councillor")
+        self.with_voting_system("FPTP")
+
+class ParlBallotBuilder(BallotBuilder):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.set("elected_role", "MP")
+        self.with_voting_system("FPTP")
 
 
 class StockLocalBallotBuilder(LocalBallotBuilder):
@@ -66,5 +97,5 @@ class StockLocalBallotBuilder(LocalBallotBuilder):
         self.with_ballot_title("Stroud Slade local election")
         self.with_post_name("Stroud Slade")
         self.with_election_name("Stroud local elections")
-        self.with_ballot_paper_id("local.stroud.slade.2024-05-02")
+        self.with_ballot_paper_id("local.stroud.stroud-slade.2024-05-02")
         self.with_election_id("local.stroud.2024-05-02")
