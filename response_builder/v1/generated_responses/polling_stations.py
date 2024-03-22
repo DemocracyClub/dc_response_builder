@@ -1,8 +1,10 @@
-from response_builder.v1.models.polling_stations import (
-    Station,
-    StationProperties,
+from response_builder.v1.builders.polling_stations import (
+    STOCK_POLLING_STATION_NO_MAP,
+    PollingStationBuilder,
 )
 
-station = Station(
-    id="AA1", type="station", properties=StationProperties(address="Foo Bar")
+WITHOUT_MAP_POLLING_STATION = PollingStationBuilder().with_station(
+    STOCK_POLLING_STATION_NO_MAP
 )
+
+WITH_MAP_POLLING_STATION = PollingStationBuilder().with_station()

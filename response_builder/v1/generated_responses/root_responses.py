@@ -2,88 +2,29 @@ from response_builder.v1.builders.ballots import (
     StockLocalBallotBuilder,
 )
 from response_builder.v1.builders.base import RootBuilder
-from response_builder.v1.builders.polling_stations import PollingStationBuilder
 from response_builder.v1.generated_responses import (
     candidates,
     electoral_services,
-    polling_stations,
 )
-
-# < -- polling stations -- >
-POLLING_STATION = (
-    PollingStationBuilder().set("polling_station_known", True).build()
+from response_builder.v1.generated_responses.ballots import (
+    GLA_BALLOT,
+    LOCAL_BALLOT,
+    MAYOR_BALLOT,
+    PARL_BALLOT,
+    PCC_BALLOT,
 )
-POLLING_STATION.station = polling_stations.station
-
-# < -- voting systems -- >
-FPTP_VOTING_SYSTEM = (
-    RootBuilder()
-    .with_ballot(StockLocalBallotBuilder().build())
-    .with_voting_system("FPTP")
+from response_builder.v1.generated_responses.candidates import (
+    CON_CANDIDATE,
+    GREEN_CANDIDATE,
 )
-STV_VOTING_SYSTEM = (
-    RootBuilder()
-    .with_ballot(StockLocalBallotBuilder().build())
-    .with_voting_system("STV")
+from response_builder.v1.generated_responses.polling_stations import (
+    WITHOUT_MAP_POLLING_STATION,
 )
-AMS_VOTING_SYSTEM = (
-    RootBuilder()
-    .with_ballot(StockLocalBallotBuilder().build())
-    .with_voting_system("AMS")
-)
-SV_VOTING_SYSTEM = (
-    RootBuilder()
-    .with_ballot(StockLocalBallotBuilder().build())
-    .with_voting_system("sv")
-)
-
-# < -- election types -- >
-LOCAL = StockLocalBallotBuilder().build()
-GLA = (
-    StockLocalBallotBuilder()
-    .with_ballot_title("London Assembly elections")
-    .with_post_name("London Assembly")
-    .with_election_name("London Assembly elections")
-    .with_ballot_paper_id("gla.a.2024-05-02")
-    .with_election_id("gla.a.2024-05-02")
-    .build()
-)
-MAYORAL = (
-    StockLocalBallotBuilder()
-    .with_ballot_title("Mayor of London")
-    .with_post_name("Mayor of London")
-    .with_election_name("Mayor of London")
-    .with_ballot_paper_id("mayor.london.2024-11-02")
-    .with_election_id("mayor.london.2024-11-02")
-    .build()
-)
-PCC = (
-    StockLocalBallotBuilder()
-    .with_ballot_title("Police and Crime Commissioner elections")
-    .with_post_name("Police and Crime Commissioner for Avon and Somerset")
-    .with_election_name("Police and Crime Commissioner election")
-    .with_ballot_paper_id("pcc.avon-and-somerset.2024-05-02")
-    .with_election_id("pcc.avon-and-somerset.2024-05-02")
-    .build()
-)
-PARL = (
-    StockLocalBallotBuilder()
-    .with_ballot_title("Stroud Slade parliamentary by-election")
-    .with_post_name("Stroud Slade constituency")
-    .with_election_name("Stroud Slade constituency")
-    .with_ballot_paper_id("parl.stroud.2024-11-14")
-    .with_election_id("parl.stroud.2024-11-14")
-    .build()
-)
+from response_builder.v1.models.base import CancellationReason
 
 # < -- root responses -- >
-NO_LOCAL_BALLOTS = RootBuilder().without_ballot()
-
-# This is a local ballot by default
-CANCELLED_BALLOT = (
-    RootBuilder()
-    .with_ballot(StockLocalBallotBuilder().build())
-    .with_cancelled()
+NO_LOCAL_BALLOTS = RootBuilder().with_electoral_services(
+    electoral_services.stroud_electoral_services
 )
 
 RECENTLY_PASSED_LOCAL_BALLOT = RootBuilder().with_ballot(
@@ -95,78 +36,144 @@ RECENTLY_PASSED_LOCAL_BALLOT = RootBuilder().with_ballot(
 
 SINGLE_LOCAL_FUTURE_BALLOT_WITH_POLLING_STATION = (
     RootBuilder()
-    .with_ballot(StockLocalBallotBuilder().build())
-    .with_candidates(candidates.all_candidates)
-    .with_polling_station(POLLING_STATION)
+    .with_ballot(
+        StockLocalBallotBuilder()
+        .with_candidates(candidates.all_candidates)
+        .build()
+    )
+    .with_polling_station(WITHOUT_MAP_POLLING_STATION.build())
     .with_electoral_services(electoral_services.stroud_electoral_services)
 )
 
 SINGLE_LOCAL_FUTURE_BALLOT_WITHOUT_POLLING_STATION = (
     RootBuilder()
-    .with_ballot(StockLocalBallotBuilder().build())
-    .with_candidates(candidates.all_candidates)
+    .with_ballot(
+        StockLocalBallotBuilder()
+        .with_candidates(candidates.all_candidates)
+        .build()
+    )
     .without_polling_station()
     .with_electoral_services(electoral_services.stroud_electoral_services)
 )
 
 SINGLE_LOCAL_FUTURE_BALLOT_WITH_ADDRESS_PICKER = (
     RootBuilder()
-    .with_ballot(LOCAL)
-    .with_candidates(candidates.all_candidates)
+    .with_ballot(
+        LOCAL_BALLOT.with_candidates(candidates.all_candidates).build()
+    )
     .with_address_picker()
     .with_electoral_services(electoral_services.wandsworth_electoral_services)
 )
 
 MULTIPLE_BALLOTS_WITH_VOTING_SYSTEM_AND_POLLING_STATION = (
     RootBuilder()
-    .with_multiple_ballots([MAYORAL, GLA])
-    .with_candidates(candidates.all_candidates)
-    .with_voting_system("FPTP")
-    .with_polling_station(POLLING_STATION)
+    .with_multiple_ballots(
+        [
+            MAYOR_BALLOT.with_candidates(candidates.all_candidates).build(),
+            GLA_BALLOT.with_candidates(candidates.all_candidates).build(),
+        ]
+    )
+    .with_polling_station(WITHOUT_MAP_POLLING_STATION.build())
     .with_electoral_services(electoral_services.stroud_electoral_services)
 )
+
+
+
+PARL_RESPONSE = (
+    RootBuilder()
+    .with_ballot(PARL_BALLOT.build())
+    .with_polling_station(WITHOUT_MAP_POLLING_STATION.build())
+    .with_electoral_services(electoral_services.stroud_electoral_services)
+)
+
+GLA_RESPONSE = (
+    RootBuilder()
+    .with_ballot(StockLocalBallotBuilder().build())
+    .with_polling_station(WITHOUT_MAP_POLLING_STATION.build())
+    .with_electoral_services(electoral_services.wandsworth_electoral_services)
+)
+
+PCC_RESPONSE = (
+    RootBuilder()
+    .with_ballot(PCC_BALLOT.build())
+    .with_polling_station(WITHOUT_MAP_POLLING_STATION.build())
+    .with_electoral_services(electoral_services.stroud_electoral_services)
+)
+
+MAYORAL_RESPONSE = (
+    RootBuilder()
+    .with_ballot(MAYOR_BALLOT.build())
+    .with_polling_station(WITHOUT_MAP_POLLING_STATION.build())
+    .with_electoral_services(electoral_services.wandsworth_electoral_services)
+)
+
+CANCELLED_BALLOT_CANDIDATE_DEATH = (
+    RootBuilder()
+    .with_ballot(
+        StockLocalBallotBuilder()
+        .with_cancellation_reason(CancellationReason.CANDIDATE_DEATH)
+        .build()
+    )
+    .with_electoral_services(electoral_services.stroud_electoral_services)
+)
+
+CANCELLED_BALLOT_NO_CANDIDATES = (
+    RootBuilder()
+    .with_ballot(
+        StockLocalBallotBuilder()
+        .with_cancellation_reason(CancellationReason.NO_CANDIDATES)
+        .build()
+    )
+    .with_electoral_services(electoral_services.stroud_electoral_services)
+)
+
+CANCELLED_BALLOT_EQUAL_CANDIDATES = (
+    RootBuilder()
+    .with_ballot(
+        StockLocalBallotBuilder()
+        .with_cancellation_reason(CancellationReason.EQUAL_CANDIDATES)
+        .set("seats_contested", 2)
+        .with_candidates([GREEN_CANDIDATE, CON_CANDIDATE])
+        .build()
+    )
+    .with_electoral_services(electoral_services.stroud_electoral_services)
+)
+
+CANCELLED_BALLOT_UNDER_CONTESTED = (
+    RootBuilder()
+    .with_ballot(
+        StockLocalBallotBuilder()
+        .with_cancellation_reason(CancellationReason.UNDER_CONTESTED)
+        .set("seats_contested", 3)
+        .with_candidates([GREEN_CANDIDATE, CON_CANDIDATE])
+        .build()
+    )
+    .with_electoral_services(electoral_services.stroud_electoral_services)
+)
+
+ONE_CANCELLED_BALLOT_ONE_NOT = (
+    RootBuilder()
+    .with_ballot(
+        PARL_BALLOT.with_date(
+            StockLocalBallotBuilder()._values["poll_open_date"]
+        ).build()
+    )
+    .with_ballot(
+        StockLocalBallotBuilder()
+        .with_cancellation_reason(CancellationReason.UNDER_CONTESTED)
+        .set("seats_contested", 3)
+        .with_candidates([GREEN_CANDIDATE, CON_CANDIDATE])
+        .build()
+    )
+    .with_electoral_services(electoral_services.stroud_electoral_services)
+)
+
 
 MULTIPLE_BALLOTS_WITH_CANCELLATION = RootBuilder().with_multiple_ballots(
     [
-        MAYORAL,
-        PARL,
-        GLA,
-        RootBuilder().with_ballot(LOCAL).with_cancelled().build(),
+        MAYOR_BALLOT.build(),
+        PARL_BALLOT.build(),
+        GLA_BALLOT.build(),
+        StockLocalBallotBuilder().with_cancellation_reason(reason=CancellationReason.CANDIDATE_DEATH).build(),
     ]
-)
-
-PARL_BALLOT = (
-    RootBuilder()
-    .with_ballot(PARL)
-    .with_polling_station(POLLING_STATION)
-    .with_electoral_services(electoral_services.stroud_electoral_services)
-)
-
-GLA_BALLOT = (
-    RootBuilder()
-    .with_ballot(StockLocalBallotBuilder().build())
-    .with_polling_station(POLLING_STATION)
-    .with_electoral_services(electoral_services.wandsworth_electoral_services)
-)
-
-PCC_BALLOT = (
-    RootBuilder()
-    .with_ballot(PCC)
-    .with_polling_station(POLLING_STATION)
-    .with_electoral_services(electoral_services.stroud_electoral_services)
-)
-
-MAYORAL_BALLOT = (
-    RootBuilder()
-    .with_ballot(MAYORAL)
-    .with_polling_station(POLLING_STATION)
-    .with_electoral_services(electoral_services.wandsworth_electoral_services)
-)
-
-CANCELLED_BALLOT = (
-    RootBuilder()
-    .with_ballot(StockLocalBallotBuilder().build())
-    .with_electoral_services(electoral_services.wandsworth_electoral_services)
-    .with_voting_system("FPTP")
-    .with_cancelled()
-)
+).with_electoral_services(electoral_services.stroud_electoral_services)

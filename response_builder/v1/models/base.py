@@ -1,4 +1,5 @@
 import datetime
+from enum import Enum
 from typing import List, Optional
 
 from email_validator import validate_email
@@ -84,8 +85,7 @@ class Person(BaseModel):
         return value
 
 
-class PreviousParty(BaseModel):
-    ...
+class PreviousParty(BaseModel): ...
 
 
 class Candidate(BaseModel):
@@ -109,6 +109,13 @@ class Husting(BaseModel):
     postevent_url: Optional[str] = Field(min_length=0)
 
 
+class CancellationReason(Enum):
+    NO_CANDIDATES = "NO_CANDIDATES"
+    EQUAL_CANDIDATES = "EQUAL_CANDIDATES"
+    UNDER_CONTESTED = "UNDER_CONTESTED"
+    CANDIDATE_DEATH = "CANDIDATE_DEATH"
+
+
 class Ballot(BaseModel):
     ballot_paper_id: str = Field()
     ballot_title: str = Field()
@@ -116,6 +123,7 @@ class Ballot(BaseModel):
     elected_role: str = Field()
     metadata: Optional[dict] = Field(default=None)
     cancelled: bool = Field(default=False)
+    cancellation_reason: Optional[CancellationReason] = Field()
     replaced_by: Optional[str] = Field()
     ballot_url: HttpUrl = Field()
     election_id: str = Field()

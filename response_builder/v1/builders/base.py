@@ -3,16 +3,12 @@ from typing import Generic, List, Optional, Type, TypeVar, Union
 
 from dateutil.parser import parse
 from pydantic import BaseModel, ValidationError
-from uk_election_ids.datapackage import VOTING_SYSTEMS
-from uk_election_ids.metadata_tools import VotingSystemMatcher
 
 from response_builder.v1.models.base import (
     Address,
     Ballot,
-    Candidate,
     Date,
     RootModel,
-    VotingSystem,
 )
 from response_builder.v1.models.councils import ElectoralServices
 from response_builder.v1.models.polling_stations import PollingStation
@@ -86,8 +82,17 @@ class RootBuilder(AbstractBuilder[RootModel]):
     def with_date(self, date_model: Optional[Date] = None):
         if "dates" not in self._values:
             self._values["dates"] = []
-        existing_dates = self._values["dates"]
-        existing_dates.append(date_model)
+        existing_dates: List = self._values["dates"]
+        matching_dates = [
+            existing_date_model
+            for existing_date_model in existing_dates
+            if existing_date_model.date == date_model.date
+        ]
+        if matching_dates:
+            existing_dates.remove(matching_dates[0])
+            existing_dates.append(date_model)
+        else:
+            existing_dates.append(date_model)
         self.set("dates", existing_dates)
         return self
 
@@ -99,34 +104,28 @@ class RootBuilder(AbstractBuilder[RootModel]):
         """
         if self._values.get("address_picker"):
             return self
-        ballot_date = ballot_model.poll_open_date
-        date_model = Date(date=str(ballot_date))
+        ballot_date = str(ballot_model.poll_open_date)
+        matching_dates = [
+            date_model
+            for date_model in self._values.get("dates", [])
+            if date_model.date == ballot_date
+        ]
+        if matching_dates:
+            date_model = matching_dates[0]
+        else:
+            date_model = Date(date=ballot_date)
         date_model.ballots.append(ballot_model)
-        self.with_date(date_model)
-        return self
+        return self.with_date(date_model)
 
     def with_multiple_ballots(self, ballot_models: List[Ballot]):
+        modified = self
         for ballot in ballot_models:
             # there may be a cancellation and this will fail
-            try:
-                self.with_ballot(ballot)
-            except Exception as e:
-                print(e)
-                continue
-        return self
+            modified = modified.with_ballot(ballot)
+        return modified
 
     def without_ballot(self):
         self._values.pop("dates", None)
-        return self
-
-    def with_candidates(self, candidates=List[Candidate]):
-        if not self._values["dates"]:
-            raise ValueError("Can't add candidates with no dates")
-
-        date = self._values["dates"][0]
-        for ballot in date.ballots:
-            ballot.candidates_verified = True
-            ballot.candidates = candidates
         return self
 
     def with_electoral_services(self, electoral_services: ElectoralServices):
@@ -145,34 +144,6 @@ class RootBuilder(AbstractBuilder[RootModel]):
             raise ValueError("Can't add polling station with no dates")
         date = self._values["dates"][0]
         date.polling_station = PollingStation()
-        return self
-
-    def with_cancelled(self):
-        if not self._values["dates"]:
-            raise ValueError("Can't cancel a ballot with no dates")
-        ballot = self._values["dates"][0].ballots[0]
-        ballot.cancelled = True
-        # This needs a notification update,
-        # but there is a conflict between
-        # expectations of list vs dict
-        return self
-
-    def with_voting_system(self, voting_system: str, nation: str = "England"):
-        if not self._values["dates"]:
-            raise ValueError(
-                "Can't set a voting_system on a ballot with no dates"
-            )
-        date = self._values["dates"][0]
-        for ballot in date.ballots:
-            election_id = ballot.ballot_paper_id
-            nation = "ENG"
-            voting_system = VotingSystemMatcher(
-                election_id, nation
-            ).get_voting_system()
-            voting_system = VotingSystem(
-                name=VOTING_SYSTEMS[voting_system]["name"], slug=voting_system
-            )
-            self.set("voting_system", voting_system)
         return self
 
     def set_date_baseline(self, new_date: Union[date, str]):
@@ -205,7 +176,6 @@ class RootBuilder(AbstractBuilder[RootModel]):
             new_date = parse(new_date).date()
 
         if not self._values.get("dates", None):
-            print(self._values)
             raise ValueError("No dates to change")
 
         baseline = parse(self._values["dates"][0].date).date()
