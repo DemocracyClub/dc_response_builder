@@ -96,6 +96,7 @@ class Candidate(BaseModel):
 class VotingSystem(BaseModel):
     slug: str = Field()
     name: str = Field()
+    uses_party_lists: bool = Field()
 
 
 class Husting(BaseModel):
