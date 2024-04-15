@@ -3,7 +3,7 @@ from typing import List
 from uk_election_ids.datapackage import VOTING_SYSTEMS
 
 from response_builder.v1.builders.base import AbstractBuilder
-from response_builder.v1.models.base import Ballot, VotingSystem, Candidate
+from response_builder.v1.models.base import Ballot, Candidate, VotingSystem
 
 REQUIRES_VOTER_ID = ["parl", "pcc", "mayor", "gla"]
 
@@ -60,7 +60,11 @@ class BallotBuilder(AbstractBuilder[Ballot]):
     def with_voting_system(self, slug: str):
         self.set(
             "voting_system",
-            VotingSystem(name=VOTING_SYSTEMS[slug]["name"], slug=slug).dict()
+            VotingSystem(
+                name=VOTING_SYSTEMS[slug]["name"],
+                slug=slug,
+                uses_party_lists=VOTING_SYSTEMS[slug]["uses_party_lists"],
+            ).dict(),
         )
         return self
 
@@ -83,6 +87,7 @@ class LocalBallotBuilder(BallotBuilder):
         super().__init__(**kwargs)
         self.set("elected_role", "Local councillor")
         self.with_voting_system("FPTP")
+
 
 class ParlBallotBuilder(BallotBuilder):
     def __init__(self, **kwargs):
