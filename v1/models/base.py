@@ -126,6 +126,8 @@ class Ballot(BaseModel):
     voting_system: VotingSystem = Field()
     seats_contested: int = Field(default=1)
     hustings: Optional[List[Husting]] = Field(default=None)
+    voter_id_requirements: str
+    postal_voting_requirements: str
 
     @validator("ballot_paper_id")
     def validate_ballot_paper_id(cls, value):
