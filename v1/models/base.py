@@ -1,5 +1,6 @@
 import datetime
-from typing import List, Optional
+from enum import Enum
+from typing import Any, Dict, List, Optional
 
 from email_validator import validate_email
 from pydantic import (
@@ -10,12 +11,14 @@ from pydantic import (
     root_validator,
     validator,
 )
+from uk_election_ids.election_ids import IdBuilder
+
+from response_builder.v1.models.common import Point
 from response_builder.v1.models.councils import ElectoralServices, Registration
 from response_builder.v1.models.polling_stations import (
     AdvanceVotingStation,
     PollingStation,
 )
-from uk_election_ids.election_ids import IdBuilder
 
 
 class Address(BaseModel):
@@ -75,22 +78,24 @@ class Person(BaseModel):
     @validator("email", pre=True)
     def validate_email(cls, value):
         if not value:
-            return
+            return None
         try:
-            validate_email(value)
+            validate_email(value, check_deliverability=False)
         except ValueError:
             return None
         return value
 
+
 class PreviousParty(BaseModel):
-    ...
+    party_id: str
+    party_name: str
 
 
 class Candidate(BaseModel):
     list_position: Optional[int] = Field()
     party: Party = Field()
     person: Person = Field()
-    previous_party_affiliations: Optional[PreviousParty] = Field()
+    previous_party_affiliations: Optional[List[PreviousParty]] = Field()
 
 
 class VotingSystem(BaseModel):
@@ -107,6 +112,12 @@ class Husting(BaseModel):
     location: Optional[str] = Field()
     postevent_url: Optional[str] = Field(min_length=0)
 
+class ElectionCancellationReason(Enum):
+    NO_CANDIDATES = "NO_CANDIDATES"
+    EQUAL_CANDIDATES = "EQUAL_CANDIDATES"
+    UNDER_CONTESTED = "UNDER_CONTESTED"
+    CANDIDATE_DEATH = "CANDIDATE_DEATH"
+
 
 class Ballot(BaseModel):
     ballot_paper_id: str = Field()
@@ -115,7 +126,9 @@ class Ballot(BaseModel):
     elected_role: str = Field()
     metadata: Optional[dict] = Field(default=None)
     cancelled: bool = Field(default=False)
+    cancellation_reason: Optional[ElectionCancellationReason] = None
     replaced_by: Optional[str] = Field()
+    replaces: Optional[str] = Field()
     ballot_url: HttpUrl = Field()
     election_id: str = Field()
     election_name: str = Field()
@@ -165,6 +178,20 @@ class Date(BaseModel):
     )
 
 
+class PostcodeLocation(BaseModel):
+    type: str
+    properties: Optional[
+        Dict[str, Any]
+    ]
+    geometry: Point
+
+    @validator("type")
+    def validate_type(cls, v):
+        if v != "Feature":
+            raise ValueError("Type must be 'Feature'")
+        return v
+
+
 class RootModel(BaseModel):
     address_picker: bool = Field(
         default=False,
@@ -201,6 +228,7 @@ class RootModel(BaseModel):
         details can be used for electoral registration related enquiries.""",
         nullable=True,
     )
+    postcode_location: PostcodeLocation
 
     @root_validator
     def not_address_picker_and_dates(cls, values):
