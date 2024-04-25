@@ -1,10 +1,16 @@
-from typing import Dict, Optional, Union
+from typing import Dict, Optional, Union, List, Tuple
 
 from pydantic import BaseModel, Field
 
+from response_builder.v1.models.common import Point
+
 
 class AdvanceVotingStation(BaseModel):
-    ...
+    name: str
+    address: str
+    postcode: str
+    location: Point
+    opening_times: List[Tuple[str, str, str]]  # List of tuples with date and opening/closing times
 
 
 class StationProperties(BaseModel):
