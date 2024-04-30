@@ -8,8 +8,10 @@ from response_builder.v1.models.base import (
     Address,
     Ballot,
     Date,
+    PostcodeLocation,
     RootModel,
 )
+from response_builder.v1.models.common import Point
 from response_builder.v1.models.councils import ElectoralServices
 from response_builder.v1.models.polling_stations import PollingStation
 
@@ -49,6 +51,15 @@ class AbstractBuilder(Generic[ModelType]):
 
 class RootBuilder(AbstractBuilder[RootModel]):
     model_class = RootModel
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.set(
+            "postcode_location",
+            PostcodeLocation(
+                geometry=Point(coordinates=[], type="Point"), type="Feature"
+            ),
+        )
 
     def with_address_picker(self):
         self.set("address_picker", True)

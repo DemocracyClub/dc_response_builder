@@ -26,6 +26,11 @@ def test_root_builder():
         "dates": [],
         "electoral_services": None,
         "registration": None,
+        "postcode_location": {
+            "geometry": {"coordinates": [], "type": "Point"},
+            "properties": None,
+            "type": "Feature",
+        },
     }
 
 

@@ -1,6 +1,7 @@
 import json
 
-from response_builder.v1.models.base import Date, RootModel
+from response_builder.v1.models.base import Date, PostcodeLocation, RootModel
+from response_builder.v1.models.common import Point
 from response_builder.v1.models.councils import ElectoralServices, Registration
 
 
@@ -31,7 +32,11 @@ def test_electoral_services_eq_registration():
 
 
 def test_root_model():
-    model = RootModel()
+    model = RootModel(
+        postcode_location=PostcodeLocation(
+            geometry=Point(coordinates=[], type="Point"), type="Feature"
+        )
+    )
 
     model.dates = [Date(date="2021-05-04")]
 
