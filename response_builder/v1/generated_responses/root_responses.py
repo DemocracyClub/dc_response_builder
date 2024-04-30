@@ -78,7 +78,6 @@ MULTIPLE_BALLOTS_WITH_VOTING_SYSTEM_AND_POLLING_STATION = (
 )
 
 
-
 PARL_RESPONSE = (
     RootBuilder()
     .with_ballot(PARL_BALLOT.build())
@@ -169,11 +168,17 @@ ONE_CANCELLED_BALLOT_ONE_NOT = (
 )
 
 
-MULTIPLE_BALLOTS_WITH_CANCELLATION = RootBuilder().with_multiple_ballots(
-    [
-        MAYOR_BALLOT.build(),
-        PARL_BALLOT.build(),
-        GLA_BALLOT.build(),
-        StockLocalBallotBuilder().with_cancellation_reason(reason=CancellationReason.CANDIDATE_DEATH).build(),
-    ]
-).with_electoral_services(electoral_services.stroud_electoral_services)
+MULTIPLE_BALLOTS_WITH_CANCELLATION = (
+    RootBuilder()
+    .with_multiple_ballots(
+        [
+            MAYOR_BALLOT.build(),
+            PARL_BALLOT.build(),
+            GLA_BALLOT.build(),
+            StockLocalBallotBuilder()
+            .with_cancellation_reason(reason=CancellationReason.CANDIDATE_DEATH)
+            .build(),
+        ]
+    )
+    .with_electoral_services(electoral_services.stroud_electoral_services)
+)

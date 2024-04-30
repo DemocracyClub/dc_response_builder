@@ -27,12 +27,9 @@ LAB_CANDIDATE = Candidate(
             )
         ],
     ),
-    previous_party_affiliations=PreviousParty(
-        name="Labour Party",
-        abbreviation="Lab",
-        colour="blue",
-        url="https://labour.com",
-    ),
+    previous_party_affiliations=[
+        PreviousParty(party_name="Liberal Democrats", party_id="PP90")
+    ],
 )
 
 CON_CANDIDATE = Candidate(
@@ -55,12 +52,9 @@ CON_CANDIDATE = Candidate(
             )
         ],
     ),
-    previous_party_affiliations=PreviousParty(
-        name="Conservative Party",
-        abbreviation="Con",
-        colour="red",
-        url="https://conservatives.com",
-    ),
+    previous_party_affiliations=[
+        PreviousParty(party_name="Liberal Democrats", party_id="PP90")
+    ],
 )
 
 LIBDEM_CANDIDATE = Candidate(
@@ -83,12 +77,9 @@ LIBDEM_CANDIDATE = Candidate(
             )
         ],
     ),
-    previous_party_affiliations=PreviousParty(
-        name="Liberal Democrats Party",
-        abbreviation="Lib Dem",
-        colour="yellow",
-        url="https://libdem.com",
-    ),
+    previous_party_affiliations=[
+        PreviousParty(party_name="Liberal Democrats", party_id="PP90")
+    ],
 )
 
 GREEN_CANDIDATE = Candidate(
@@ -111,12 +102,9 @@ GREEN_CANDIDATE = Candidate(
             )
         ],
     ),
-    previous_party_affiliations=PreviousParty(
-        name="Green Party",
-        abbreviation="Green",
-        colour="green",
-        url="https://greenparty.com",
-    ),
+    previous_party_affiliations=[
+        PreviousParty(party_name="Liberal Democrats", party_id="PP90")
+    ],
 )
 
 INDEPENDENT_CANDIDATE = Candidate(
@@ -131,7 +119,7 @@ INDEPENDENT_CANDIDATE = Candidate(
         absolute_url="https://candidates.democracyclub.org.uk/person/101112",
         email=EmailStr("independent@example.com"),
         photo_url="https://s3.eu-west-2.amazonaws.com/static-candidates.democracyclub.org.uk/media/cache/fc/101112/fc101112.jpg",
-    )
+    ),
 )
 REFORM_CANDIDATE = Candidate(
     list_position=4,
@@ -145,7 +133,7 @@ REFORM_CANDIDATE = Candidate(
         absolute_url="https://candidates.democracyclub.org.uk/person/101112",
         email=EmailStr("independent@example.com"),
         photo_url="https://s3.eu-west-2.amazonaws.com/static-candidates.democracyclub.org.uk/media/cache/fc/101112/fc101112.jpg",
-    )
+    ),
 )
 
 ni_candidate = Candidate(
@@ -168,9 +156,11 @@ ni_candidate = Candidate(
             )
         ],
     ),
-    previous_party_affiliations=PreviousParty(
-        name="Irish Republican Socialist Party"
-    ),
+    previous_party_affiliations=[
+        PreviousParty(
+            party_name="Irish Republican Socialist Party", party_id="PP123"
+        )
+    ],
 )
 
 # make a list of candidates

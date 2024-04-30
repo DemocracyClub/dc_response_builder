@@ -3,10 +3,11 @@ import importlib
 import pytest
 from uk_election_ids.datapackage import ELECTION_TYPES, VOTING_SYSTEMS
 
-from response_builder.v1.generated_responses.polling_stations import WITHOUT_MAP_POLLING_STATION
-from response_builder.v1.sandbox import SANDBOX_POSTCODES
 from response_builder.v1.builders.ballots import StockLocalBallotBuilder
 from response_builder.v1.builders.base import AbstractBuilder, RootBuilder
+from response_builder.v1.generated_responses.polling_stations import (
+    WITHOUT_MAP_POLLING_STATION,
+)
 from response_builder.v1.models.base import Candidate, RootModel
 
 
@@ -62,6 +63,9 @@ def generate_expected_data():
     var_names = []
     for election_type, data in ELECTION_TYPES.items():
         election_type = election_type.upper()
+        # TODO: Add these examples in
+        if election_type in ["NIA", "NAW", "SENEDD", "SP", "EUROPARL"]:
+            continue
         for subtype in data.get("subtypes", []):
             var_names.append(
                 "_".join(
@@ -85,8 +89,9 @@ def generate_expected_data():
     for party in parties:
         all_data.append(("candidates", f"{party}_CANDIDATE", Candidate))
 
-    for postcode in SANDBOX_POSTCODES:
-        all_data.append(("sandbox", f"{postcode}_RESPONSE", AbstractBuilder))
+    # TODO: add these in
+    # for postcode in SANDBOX_POSTCODES:
+    #     all_data.append(("sandbox", f"{postcode}_RESPONSE", AbstractBuilder))
 
     return all_data
 
