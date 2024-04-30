@@ -112,7 +112,15 @@ class Husting(BaseModel):
     location: Optional[str] = Field()
     postevent_url: Optional[str] = Field(min_length=0)
 
+
 class ElectionCancellationReason(Enum):
+    NO_CANDIDATES = "NO_CANDIDATES"
+    EQUAL_CANDIDATES = "EQUAL_CANDIDATES"
+    UNDER_CONTESTED = "UNDER_CONTESTED"
+    CANDIDATE_DEATH = "CANDIDATE_DEATH"
+
+
+class CancellationReason(Enum):
     NO_CANDIDATES = "NO_CANDIDATES"
     EQUAL_CANDIDATES = "EQUAL_CANDIDATES"
     UNDER_CONTESTED = "UNDER_CONTESTED"
@@ -126,7 +134,7 @@ class Ballot(BaseModel):
     elected_role: str = Field()
     metadata: Optional[dict] = Field(default=None)
     cancelled: bool = Field(default=False)
-    cancellation_reason: Optional[ElectionCancellationReason] = None
+    cancellation_reason: Optional[CancellationReason] = Field()
     replaced_by: Optional[str] = Field()
     replaces: Optional[str] = Field()
     ballot_url: HttpUrl = Field()
@@ -136,10 +144,11 @@ class Ballot(BaseModel):
     candidates_verified: bool = Field(default=False)
     candidates: List[Candidate] = Field(default_factory=list)
     wcivf_url: HttpUrl = Field()
-    voting_system: VotingSystem = Field()
+    voting_system: VotingSystem = Field(default=None)
     seats_contested: int = Field(default=1)
     hustings: Optional[List[Husting]] = Field(default=None)
-    requires_voter_id: Optional[str]
+    requires_voter_id: Optional[str] = Field(default=False)
+    voter_id_requirements: Optional[str]
     postal_voting_requirements: Optional[str]
 
     @validator("ballot_paper_id")
@@ -148,6 +157,9 @@ class Ballot(BaseModel):
         if not election_id.ballot_id == value:
             raise ValueError("Not a valid ballot_paper_id")
         return value
+
+    class Config:
+        validate_assignment = True
 
 
 class Date(BaseModel):
@@ -180,9 +192,7 @@ class Date(BaseModel):
 
 class PostcodeLocation(BaseModel):
     type: str
-    properties: Optional[
-        Dict[str, Any]
-    ]
+    properties: Optional[Dict[str, Any]]
     geometry: Point
 
     @validator("type")
