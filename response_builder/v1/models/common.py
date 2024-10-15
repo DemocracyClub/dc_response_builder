@@ -7,7 +7,7 @@ class Point(BaseModel):
     type: str
     coordinates: List[float]
 
-    @validator('type')
+    @validator("type")
     def validate_type(cls, v):
         if not v == "Point":
             raise ValueError("Point required")
