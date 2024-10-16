@@ -1,4 +1,4 @@
-from typing import Dict, Optional, Union, List, Tuple
+from typing import Dict, List, Optional, Tuple, Union
 
 from pydantic import BaseModel, Field
 
@@ -10,7 +10,9 @@ class AdvanceVotingStation(BaseModel):
     address: str
     postcode: str
     location: Point
-    opening_times: List[Tuple[str, str, str]]  # List of tuples with date and opening/closing times
+    opening_times: List[
+        Tuple[str, str, str]
+    ]  # List of tuples with date and opening/closing times
 
 
 class StationProperties(BaseModel):
