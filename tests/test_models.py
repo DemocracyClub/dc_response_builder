@@ -107,19 +107,17 @@ def test_root_model():
     }
   ],
   "electoral_services": {
-    "council_id": "N09000007",
+    "council_id": "ABC",
     "name": "",
     "nation": "Northern Ireland",
     "email": "info@eoni.org.uk",
     "phone": "",
     "website": "http://www.eoni.org.uk/",
     "postcode": "BT1 1ER",
-    "address": "The Electoral Office Headquarters St Anne's House 15 Church Street Belfast"
+    "address": "The Electoral Office Headquarters St Anne's House 15 Church Street Belfast",
+    "identifiers": ["N09000007"]
   },
   "registration": {
-    "council_id": "N09000007",
-    "name": "",
-    "nation": "Northern Ireland",
     "email": "info@eoni.org.uk",
     "phone": "",
     "website": "http://www.eoni.org.uk/",
