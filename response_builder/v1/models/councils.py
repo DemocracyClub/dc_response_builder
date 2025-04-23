@@ -48,30 +48,6 @@ class ElectoralServices(BaseModel):
             return f"https://{val}"
         return val
 
-    @classmethod
-    def from_ec_api(cls, json_data):
-        def _nation_from_gss(gss):
-            gss_prefix = gss[0]
-            nations_lookup = {
-                "E": "England",
-                "W": "Wales",
-                "S": "Scotland",
-                "N": "Northern Ireland",
-            }
-            return nations_lookup.get(gss_prefix)
-
-        data = json.loads(json_data)
-        cleaned = {}
-        cleaned["council_id"] = data["code"]
-        cleaned["name"] = data["official_name"]
-        cleaned["address"] = data["electoral_services"][0]["address"]
-        cleaned["postcode"] = data["electoral_services"][0]["postcode"]
-        cleaned["email"] = data["electoral_services"][0]["email"]
-        cleaned["website"] = data["electoral_services"][0]["website"]
-        cleaned["phone"] = data["electoral_services"][0]["tel"][0]
-        cleaned["nation"] = _nation_from_gss(data["identifiers"][0])
-        return cls(**cleaned)
-
 
 class Registration(BaseModel):
     """
