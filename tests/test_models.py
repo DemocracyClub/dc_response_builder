@@ -15,6 +15,7 @@ def test_electoral_services_eq_registration():
         "phone": "123456",
         "email": "foo@bar.gov.uk",
         "website": "https://example.com",
+        "identifiers": [],
     }
 
     reg = Registration(**kwargs)

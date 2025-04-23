@@ -1,5 +1,4 @@
-import json
-from typing import Any, Optional
+from typing import Any, List, Optional
 
 from pydantic import BaseModel, EmailStr, Field, HttpUrl, validator
 
@@ -25,6 +24,9 @@ class ElectoralServices(BaseModel):
     )
     website: Optional[HttpUrl] = Field(
         ..., description="URL for this council's website"
+    )
+    identifiers: List[str] = Field(
+        ..., description="List of alternative identifiers for this council"
     )
 
     def __eq__(self, other: Any) -> bool:
