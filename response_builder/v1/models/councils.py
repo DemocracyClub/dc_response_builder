@@ -5,7 +5,9 @@ from pydantic import BaseModel, EmailStr, Field, HttpUrl, validator
 
 
 class ElectoralServices(BaseModel):
-    council_id: str = Field(..., description="GSS code for this council")
+    council_id: str = Field(
+        ..., description="Three letter code for this council"
+    )
     name: str = Field(..., description="Name of this council")
     nation: str = Field(..., description="Name of nation")
     address: str = Field(..., description="Contact address for this council")
