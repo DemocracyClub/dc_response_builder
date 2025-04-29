@@ -9,6 +9,7 @@ wandsworth_electoral_services = ElectoralServices(
     phone="020 8871 6023",
     postcode="SW118DD",
     website="https://www.wandsworth.gov.uk",
+    identifiers=["E09000032"],
 )
 
 stroud_electoral_services = ElectoralServices(
@@ -20,4 +21,5 @@ stroud_electoral_services = ElectoralServices(
     phone="123456",
     postcode="GL51AA",
     website="https://stroud.gov.uk",
+    identifiers=["E07000082"],
 )

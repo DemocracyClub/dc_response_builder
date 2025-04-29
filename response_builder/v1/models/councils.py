@@ -1,11 +1,12 @@
-import json
-from typing import Any, Optional
+from typing import Any, List, Optional
 
 from pydantic import BaseModel, EmailStr, Field, HttpUrl, validator
 
 
 class ElectoralServices(BaseModel):
-    council_id: str = Field(..., description="GSS code for this council")
+    council_id: str = Field(
+        ..., description="Three letter code for this council"
+    )
     name: str = Field(..., description="Name of this council")
     nation: str = Field(..., description="Name of nation")
     address: str = Field(..., description="Contact address for this council")
@@ -23,6 +24,9 @@ class ElectoralServices(BaseModel):
     )
     website: Optional[HttpUrl] = Field(
         ..., description="URL for this council's website"
+    )
+    identifiers: List[str] = Field(
+        ..., description="List of alternative identifiers for this council"
     )
 
     def __eq__(self, other: Any) -> bool:
@@ -47,30 +51,6 @@ class ElectoralServices(BaseModel):
         if not val.startswith("http"):
             return f"https://{val}"
         return val
-
-    @classmethod
-    def from_ec_api(cls, json_data):
-        def _nation_from_gss(gss):
-            gss_prefix = gss[0]
-            nations_lookup = {
-                "E": "England",
-                "W": "Wales",
-                "S": "Scotland",
-                "N": "Northern Ireland",
-            }
-            return nations_lookup.get(gss_prefix)
-
-        data = json.loads(json_data)
-        cleaned = {}
-        cleaned["council_id"] = data["code"]
-        cleaned["name"] = data["official_name"]
-        cleaned["address"] = data["electoral_services"][0]["address"]
-        cleaned["postcode"] = data["electoral_services"][0]["postcode"]
-        cleaned["email"] = data["electoral_services"][0]["email"]
-        cleaned["website"] = data["electoral_services"][0]["website"]
-        cleaned["phone"] = data["electoral_services"][0]["tel"][0]
-        cleaned["nation"] = _nation_from_gss(data["identifiers"][0])
-        return cls(**cleaned)
 
 
 class Registration(BaseModel):
