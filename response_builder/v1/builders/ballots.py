@@ -49,6 +49,10 @@ class BallotBuilder(AbstractBuilder[Ballot]):
         self.set("post_name", post_name)
         return self
 
+    def with_elected_role(self, elected_role):
+        self.set("elected_role", elected_role)
+        return self
+
     def with_election_name(self, election_name):
         self.set("election_name", election_name)
         return self
@@ -85,14 +89,14 @@ class BallotBuilder(AbstractBuilder[Ballot]):
 class LocalBallotBuilder(BallotBuilder):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.set("elected_role", "Local councillor")
+        self.with_elected_role("Local councillor")
         self.with_voting_system("FPTP")
 
 
 class ParlBallotBuilder(BallotBuilder):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.set("elected_role", "MP")
+        self.with_elected_role("MP")
         self.with_voting_system("FPTP")
 
 
