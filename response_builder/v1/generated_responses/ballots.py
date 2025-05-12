@@ -22,6 +22,7 @@ GLA_BALLOT = (
     .with_election_name("London Assembly elections")
     .with_ballot_paper_id("gla.a.2024-05-02")
     .with_election_id("gla.a.2024-05-02")
+    .with_elected_role("Assembly Member")
     .with_voting_system("AMS")
 )
 GLA_C_BALLOT = BallotBuilder()
@@ -37,6 +38,7 @@ PCC_BALLOT = (
     .with_election_name("Police and Crime Commissioner election")
     .with_ballot_paper_id("pcc.avon-and-somerset.2024-05-02")
     .with_election_id("pcc.avon-and-somerset.2024-05-02")
+    .with_elected_role("Police and Crime Commissioner")
     .with_voting_system("FPTP")
 )
 MAYOR_BALLOT = (
@@ -47,6 +49,7 @@ MAYOR_BALLOT = (
     .with_ballot_paper_id("mayor.london.2024-11-02")
     .with_election_id("mayor.london.2024-11-02")
     .with_voting_system("FPTP")
+    .with_elected_role("Mayor")
     .with_candidates(candidates.all_candidates)
 )
 CANCELLED_BALLOT = BallotBuilder()
