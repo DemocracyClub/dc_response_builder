@@ -131,7 +131,7 @@ class Ballot(BaseModel):
     ballot_paper_id: str = Field()
     ballot_title: str = Field()
     poll_open_date: datetime.date = Field()
-    elected_role: str = Field()
+    elected_role: Optional[str] = Field(default=None)
     metadata: Optional[dict] = Field(default=None)
     cancelled: bool = Field(default=False)
     cancellation_reason: Optional[CancellationReason] = Field()
