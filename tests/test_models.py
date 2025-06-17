@@ -1,6 +1,15 @@
 import json
 
-from response_builder.v1.models.base import Date, PostcodeLocation, RootModel
+import pytest
+from pydantic import ValidationError
+
+from response_builder.v1.generated_responses import ballots
+from response_builder.v1.models.base import (
+    Ballot,
+    Date,
+    PostcodeLocation,
+    RootModel,
+)
 from response_builder.v1.models.common import Point
 from response_builder.v1.models.councils import ElectoralServices, Registration
 
@@ -141,3 +150,22 @@ def test_root_model():
 """
 
     assert model.validate(json.loads(data))
+
+
+def test_ballot_with_elected_role():
+    ballot = Ballot(**ballots.LOCAL_BALLOT.build().dict())
+    assert ballot.elected_role == "Local councillor"
+
+
+def test_missing_elected_role():
+    data = ballots.LOCAL_BALLOT.build().dict()
+    data.pop("elected_role")
+    with pytest.raises(ValidationError) as excinfo:
+        Ballot(**data)
+    assert "elected_role must be provided" in str(excinfo.value)
+
+
+def test_elected_role_referendum():
+    data = ballots.REF_BALLOT.build().dict()
+    ballot = Ballot(**data)
+    assert ballot.elected_role is None

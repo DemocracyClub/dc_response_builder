@@ -131,7 +131,7 @@ class Ballot(BaseModel):
     ballot_paper_id: str = Field()
     ballot_title: str = Field()
     poll_open_date: datetime.date = Field()
-    elected_role: str = Field()
+    elected_role: Optional[str] = Field(default=None)
     metadata: Optional[dict] = Field(default=None)
     cancelled: bool = Field(default=False)
     cancellation_reason: Optional[CancellationReason] = Field()
@@ -156,6 +156,14 @@ class Ballot(BaseModel):
         if not election_id.ballot_id == value:
             raise ValueError("Not a valid ballot_paper_id")
         return value
+
+    @root_validator
+    def check_elected_role_condition(cls, values):
+        ballot_paper_id = values.get("ballot_paper_id")
+        elected_role = values.get("elected_role")
+        if elected_role is None and not ballot_paper_id.startswith("ref."):
+            raise ValueError("elected_role must be provided")
+        return values
 
     class Config:
         validate_assignment = True
