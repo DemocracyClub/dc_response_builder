@@ -18,5 +18,5 @@ setup(
             "response_builder/v1/**/*",
         ]
     },
-    install_requires=["uk-election-ids==0.8.0", "pydantic[email]>=1.10,<2"],
+    install_requires=["uk-election-ids>=0.8.0", "pydantic[email]>=1.10,<2"],
 )
