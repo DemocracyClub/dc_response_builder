@@ -127,6 +127,33 @@ class CancellationReason(Enum):
     CANDIDATE_DEATH = "CANDIDATE_DEATH"
 
 
+class ByElectionReason(Enum):
+    """
+    Reasons why a by-election may be triggered.
+
+    Not all of these can be applied to all election types.
+
+    e.g. a recall petition is only used in Westminster, and failure to attend meetings
+    applies to local government.
+
+    The choices here are in part based on:
+        UK Electoral Commission guidance on casual vacancies:
+        https://www.electoralcommission.org.uk/guidance-returning-officers-administering-local-government-elections-england/casual-vacancies-and-elections/how-casual-vacancies-occur
+    """
+
+    DEATH = "DEATH"
+    RESIGNATION = "RESIGNATION"
+    ELECTORAL_COURT = "ELECTORAL_COURT"
+    FAILURE_TO_ACCEPT = "FAILURE_TO_ACCEPT"
+    FAILURE_TO_ATTEND_MEETINGS = "FAILURE_TO_ATTEND_MEETINGS"
+    DISQUALIFICATION = "DISQUALIFICATION"
+    LOSING_QUALIFICATION = "LOSING_QUALIFICATION"
+    RECALL_PETITION = "RECALL_PETITION"
+    OTHER = "OTHER"
+    UNKNOWN = "UNKNOWN"
+    NOT_APPLICABLE = ""
+
+
 class Ballot(BaseModel):
     ballot_paper_id: str = Field()
     ballot_title: str = Field()
@@ -149,6 +176,9 @@ class Ballot(BaseModel):
     hustings: Optional[List[Husting]] = Field(default=None)
     requires_voter_id: Optional[str] = Field(default=False)
     postal_voting_requirements: Optional[str]
+    by_election_reason: ByElectionReason = Field(
+        default=ByElectionReason.NOT_APPLICABLE
+    )
 
     @validator("ballot_paper_id")
     def validate_ballot_paper_id(cls, value):

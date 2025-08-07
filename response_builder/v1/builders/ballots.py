@@ -85,6 +85,10 @@ class BallotBuilder(AbstractBuilder[Ballot]):
         self.set("cancellation_reason", reason)
         return self.cancelled()
 
+    def with_by_election_reason(self, reason):
+        self.set("by_election_reason", reason)
+        return self
+
 
 class LocalBallotBuilder(BallotBuilder):
     def __init__(self, **kwargs):
