@@ -4,7 +4,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="dc_response_builder",
-    version="1.1.3",
+    version="1.1.4",
     description="Builds API responses",
     author="Sym Roe",
     author_email="sym.roe@democracyclub.org.uk",
