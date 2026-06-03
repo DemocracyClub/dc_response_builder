@@ -139,6 +139,16 @@ class ByElectionReason(Enum):
     The choices here are in part based on:
         UK Electoral Commission guidance on casual vacancies:
         https://www.electoralcommission.org.uk/guidance-returning-officers-administering-local-government-elections-england/casual-vacancies-and-elections/how-casual-vacancies-occur
+
+    'Disqualification' can be caused by an elected member being elected to another position.
+    Since 'DISQUALIFICATION' sounds bad, we've made special cases for by-elections triggered
+    because the member was elected to another position and is disqualified from holding both.
+    In these cases the legislation is:
+        https://www.legislation.gov.uk/ukpga/2000/22/section/9HA (ELECTED_COUNCIL_MAYOR)
+        https://commonslibrary.parliament.uk/research-briefings/cbp-10853/ (ELECTED_PARLIAMENT)
+        https://commonslibrary.parliament.uk/research-briefings/cbp-10853/ (ELECTED_STRATEGIC_AUTHORITY_MAYOR)
+        https://www.legislation.gov.uk/ukpga/2006/32/part/1/crossheading/disqualification (ELECTED_SENEDD)
+        https://www.legislation.gov.uk/ukpga/1998/46/part/I/crossheading/disqualification (ELECTED_SCOTTISH_PARLIAMENT)
     """
 
     DEATH = "DEATH"
@@ -149,6 +159,11 @@ class ByElectionReason(Enum):
     DISQUALIFICATION = "DISQUALIFICATION"
     LOSING_QUALIFICATION = "LOSING_QUALIFICATION"
     RECALL_PETITION = "RECALL_PETITION"
+    ELECTED_COUNCIL_MAYOR = "ELECTED_COUNCIL_MAYOR"
+    ELECTED_PARLIAMENT = "ELECTED_PARLIAMENT"
+    ELECTED_STRATEGIC_AUTHORITY_MAYOR = "ELECTED_STRATEGIC_AUTHORITY_MAYOR"
+    ELECTED_SENEDD = "ELECTED_SENEDD"
+    ELECTED_SCOTTISH_PARLIAMENT = "ELECTED_SCOTTISH_PARLIAMENT"
     OTHER = "OTHER"
     UNKNOWN = "UNKNOWN"
     NOT_APPLICABLE = ""
