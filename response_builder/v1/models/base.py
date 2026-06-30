@@ -169,6 +169,14 @@ class ByElectionReason(Enum):
     NOT_APPLICABLE = ""
 
 
+class Timetable(BaseModel):
+    notice_of_election_deadline: datetime.date = Field(default=None)
+    close_of_nominations: datetime.date = Field(default=None)
+    registration_deadline: datetime.date = Field(default=None)
+    postal_vote_application_deadline: datetime.date = Field(default=None)
+    vac_application_deadline: datetime.date = Field(default=None)
+
+
 class Ballot(BaseModel):
     ballot_paper_id: str = Field()
     ballot_title: str = Field()
@@ -190,6 +198,7 @@ class Ballot(BaseModel):
     seats_contested: int = Field(default=1)
     hustings: Optional[List[Husting]] = Field(default=None)
     requires_voter_id: Optional[str] = Field(default=False)
+    timetable: Timetable = Field()
     postal_voting_requirements: Optional[str]
     by_election_reason: ByElectionReason = Field(
         default=ByElectionReason.NOT_APPLICABLE

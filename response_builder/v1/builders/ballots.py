@@ -1,11 +1,55 @@
+import datetime as dt
 from typing import List
 
 from uk_election_ids.datapackage import VOTING_SYSTEMS
 
 from response_builder.v1.builders.base import AbstractBuilder
-from response_builder.v1.models.base import Ballot, Candidate, VotingSystem
+from response_builder.v1.models.base import (
+    Ballot,
+    Candidate,
+    Timetable,
+    VotingSystem,
+)
 
 REQUIRES_VOTER_ID = ["parl", "pcc", "mayor", "gla"]
+
+
+def get_default_timetable(
+    ballot_paper_id: str, poll_date: str, requires_id: bool
+):
+    """
+    Generate a plausible-ish fake timetable
+    ignoring a lot of complexity and nuance
+    """
+
+    polling_day = dt.date.fromisoformat(poll_date)
+    if ballot_paper_id.startswith("ref."):
+        notice_of_election_deadline = None
+        close_of_nominations = None
+    else:
+        notice_of_election_deadline = (
+            polling_day - dt.timedelta(weeks=5)
+        ).isoformat()
+        close_of_nominations = (polling_day - dt.timedelta(weeks=4)).isoformat()
+
+    registration_deadline = (polling_day - dt.timedelta(weeks=2)).isoformat()
+    postal_vote_application_deadline = (
+        polling_day - dt.timedelta(days=13)
+    ).isoformat()
+
+    vac_application_deadline = (
+        (polling_day - dt.timedelta(weeks=1)).isoformat()
+        if requires_id
+        else None
+    )
+
+    return Timetable(
+        notice_of_election_deadline=notice_of_election_deadline,
+        close_of_nominations=close_of_nominations,
+        registration_deadline=registration_deadline,
+        postal_vote_application_deadline=postal_vote_application_deadline,
+        vac_application_deadline=vac_application_deadline,
+    )
 
 
 class BallotBuilder(AbstractBuilder[Ballot]):
@@ -15,13 +59,20 @@ class BallotBuilder(AbstractBuilder[Ballot]):
         parts = ballot_paper_id.split(".")
         date = parts[-1]
         self.with_date(date)
-        if any(
+        requires_id = any(
             election_type in ballot_paper_id
             for election_type in REQUIRES_VOTER_ID
-        ):
+        )
+
+        if requires_id:
             self.with_voter_id_requirements(True)
 
         self.set("ballot_paper_id", ballot_paper_id)
+
+        self.set(
+            "timetable",
+            get_default_timetable(ballot_paper_id, date, requires_id),
+        )
 
         self.set(
             "wcivf_url",
@@ -87,6 +138,36 @@ class BallotBuilder(AbstractBuilder[Ballot]):
 
     def with_by_election_reason(self, reason):
         self.set("by_election_reason", reason)
+        return self
+
+    def with_notice_of_election_deadline(self, date: str):
+        timetable = self._values.get("timetable", Timetable())
+        timetable.notice_of_election_deadline = date
+        self.set("timetable", timetable)
+        return self
+
+    def with_close_of_nominations(self, date: str):
+        timetable = self._values.get("timetable", Timetable())
+        timetable.close_of_nominations = date
+        self.set("timetable", timetable)
+        return self
+
+    def with_registration_deadline(self, date: str):
+        timetable = self._values.get("timetable", Timetable())
+        timetable.registration_deadline = date
+        self.set("timetable", timetable)
+        return self
+
+    def with_postal_vote_application_deadline(self, date: str):
+        timetable = self._values.get("timetable", Timetable())
+        timetable.postal_vote_application_deadline = date
+        self.set("timetable", timetable)
+        return self
+
+    def with_vac_application_deadline(self, date: str):
+        timetable = self._values.get("timetable", Timetable())
+        timetable.vac_application_deadline = date
+        self.set("timetable", timetable)
         return self
 
 
