@@ -23,13 +23,14 @@ def get_default_timetable(
     """
 
     polling_day = dt.date.fromisoformat(poll_date)
+
+    notice_of_election_deadline = (
+        polling_day - dt.timedelta(weeks=5)
+    ).isoformat()
+
     if ballot_paper_id.startswith("ref."):
-        notice_of_election_deadline = None
         close_of_nominations = None
     else:
-        notice_of_election_deadline = (
-            polling_day - dt.timedelta(weeks=5)
-        ).isoformat()
         close_of_nominations = (polling_day - dt.timedelta(weeks=4)).isoformat()
 
     registration_deadline = (polling_day - dt.timedelta(weeks=2)).isoformat()
