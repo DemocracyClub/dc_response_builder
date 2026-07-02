@@ -172,6 +172,7 @@ class ByElectionReason(Enum):
 class Timetable(BaseModel):
     notice_of_election_deadline: datetime.date = Field(default=None)
     close_of_nominations: datetime.date = Field(default=None)
+    sopn_publish_deadline: datetime.date = Field(default=None)
     registration_deadline: datetime.date = Field(default=None)
     postal_vote_application_deadline: datetime.date = Field(default=None)
     vac_application_deadline: datetime.date = Field(default=None)
