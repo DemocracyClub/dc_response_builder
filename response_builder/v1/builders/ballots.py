@@ -30,8 +30,12 @@ def get_default_timetable(
 
     if ballot_paper_id.startswith("ref."):
         close_of_nominations = None
+        sopn_publish_deadline = None
     else:
         close_of_nominations = (polling_day - dt.timedelta(weeks=4)).isoformat()
+        sopn_publish_deadline = (
+            polling_day - dt.timedelta(weeks=4) + dt.timedelta(days=1)
+        ).isoformat()
 
     registration_deadline = (polling_day - dt.timedelta(weeks=2)).isoformat()
     postal_vote_application_deadline = (
@@ -47,6 +51,7 @@ def get_default_timetable(
     return Timetable(
         notice_of_election_deadline=notice_of_election_deadline,
         close_of_nominations=close_of_nominations,
+        sopn_publish_deadline=sopn_publish_deadline,
         registration_deadline=registration_deadline,
         postal_vote_application_deadline=postal_vote_application_deadline,
         vac_application_deadline=vac_application_deadline,
