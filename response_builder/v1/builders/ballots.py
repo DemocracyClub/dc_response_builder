@@ -71,7 +71,7 @@ class BallotBuilder(AbstractBuilder[Ballot]):
         )
 
         if requires_id:
-            self.with_voter_id_requirements(True)
+            self.with_voter_id_requirements("EA-2022")
 
         self.set("ballot_paper_id", ballot_paper_id)
 
@@ -90,7 +90,7 @@ class BallotBuilder(AbstractBuilder[Ballot]):
         )
         return self
 
-    def with_voter_id_requirements(self, requires_voter_id=False):
+    def with_voter_id_requirements(self, requires_voter_id=None):
         self.set("requires_voter_id", requires_voter_id)
         return self
 
