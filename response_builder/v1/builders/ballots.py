@@ -41,6 +41,12 @@ def get_default_timetable(
     postal_vote_application_deadline = (
         polling_day - dt.timedelta(days=13)
     ).isoformat()
+    proxy_vote_application_deadline = (
+        polling_day - dt.timedelta(days=6)
+    ).isoformat()
+    replacement_pack_start_date = (
+        polling_day - dt.timedelta(days=4)
+    ).isoformat()
 
     vac_application_deadline = (
         (polling_day - dt.timedelta(weeks=1)).isoformat()
@@ -54,6 +60,8 @@ def get_default_timetable(
         sopn_publish_deadline=sopn_publish_deadline,
         registration_deadline=registration_deadline,
         postal_vote_application_deadline=postal_vote_application_deadline,
+        proxy_vote_application_deadline=proxy_vote_application_deadline,
+        replacement_pack_start_date=replacement_pack_start_date,
         vac_application_deadline=vac_application_deadline,
     )
 
@@ -173,6 +181,18 @@ class BallotBuilder(AbstractBuilder[Ballot]):
     def with_postal_vote_application_deadline(self, date: str):
         timetable = self._values.get("timetable", Timetable())
         timetable.postal_vote_application_deadline = date
+        self.set("timetable", timetable)
+        return self
+
+    def with_proxy_vote_application_deadline(self, date: str):
+        timetable = self._values.get("timetable", Timetable())
+        timetable.proxy_vote_application_deadline = date
+        self.set("timetable", timetable)
+        return self
+
+    def with_replacement_pack_start_date(self, date: str):
+        timetable = self._values.get("timetable", Timetable())
+        timetable.replacement_pack_start_date = date
         self.set("timetable", timetable)
         return self
 

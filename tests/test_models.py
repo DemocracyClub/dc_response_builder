@@ -96,6 +96,8 @@ def test_root_model():
             "sopn_publish_deadline": "2018-04-07",
             "registration_deadline": "2018-04-17",
             "postal_vote_application_deadline": "2018-04-13",
+            "proxy_vote_application_deadline": "2018-04-20",
+            "replacement_pack_start_date": "2018-04-22",
             "vac_application_deadline": null
           },
           "election_id": "parl.2018-05-03",

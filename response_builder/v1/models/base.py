@@ -175,6 +175,8 @@ class Timetable(BaseModel):
     sopn_publish_deadline: datetime.date = Field(default=None)
     registration_deadline: datetime.date = Field(default=None)
     postal_vote_application_deadline: datetime.date = Field(default=None)
+    proxy_vote_application_deadline: datetime.date = Field(default=None)
+    replacement_pack_start_date: datetime.date = Field(default=None)
     vac_application_deadline: datetime.date = Field(default=None)
 
 
