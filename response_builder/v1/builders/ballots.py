@@ -158,6 +158,12 @@ class BallotBuilder(AbstractBuilder[Ballot]):
         self.set("timetable", timetable)
         return self
 
+    def with_sopn_publish_deadline(self, date: str):
+        timetable = self._values.get("timetable", Timetable())
+        timetable.sopn_publish_deadline = date
+        self.set("timetable", timetable)
+        return self
+
     def with_registration_deadline(self, date: str):
         timetable = self._values.get("timetable", Timetable())
         timetable.registration_deadline = date
