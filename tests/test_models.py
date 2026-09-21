@@ -91,9 +91,13 @@ def test_root_model():
           "replaces": null,
           "requires_voter_id": "EFA-2002",
           "timetable": {
+            "notice_of_election_deadline": "2018-03-29",
             "close_of_nominations": "2018-04-06",
+            "sopn_publish_deadline": "2018-04-07",
             "registration_deadline": "2018-04-17",
             "postal_vote_application_deadline": "2018-04-13",
+            "proxy_vote_application_deadline": "2018-04-20",
+            "replacement_pack_start_date": "2018-04-22",
             "vac_application_deadline": null
           },
           "election_id": "parl.2018-05-03",
