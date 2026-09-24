@@ -104,7 +104,7 @@ class RootBuilder(AbstractBuilder[RootModel]):
             existing_dates.append(date_model)
         else:
             existing_dates.append(date_model)
-        self.set("dates", existing_dates)
+        self.set("dates", sorted(existing_dates, key=lambda d: d.date))
         return self
 
     def with_ballot(self, ballot_model: Ballot):
