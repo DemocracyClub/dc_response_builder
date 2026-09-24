@@ -109,7 +109,7 @@ class RootBuilder(AbstractBuilder[RootModel]):
 
     def with_ballot(self, ballot_model: Ballot):
         """
-        Convince class for adding a ballot inside a date object.
+        Convenience method for adding a ballot inside a date object.
 
         The date of the ballot is added to the dates array
         """
