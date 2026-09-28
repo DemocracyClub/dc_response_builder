@@ -4,7 +4,10 @@ import importlib
 import pytest
 from uk_election_ids.datapackage import ELECTION_TYPES, VOTING_SYSTEMS
 
-from response_builder.v1.builders.ballots import StockLocalBallotBuilder
+from response_builder.v1.builders.ballots import (
+    StockLocalBallotBuilder,
+    get_default_timetable,
+)
 from response_builder.v1.builders.base import AbstractBuilder, RootBuilder
 from response_builder.v1.generated_responses.polling_stations import (
     WITHOUT_MAP_POLLING_STATION,
@@ -73,6 +76,21 @@ def test_set_date_baseline_moves_date_and_ballot_fields():
         moved_ballot.ballot_paper_id == "local.stroud.stroud-slade.2030-01-01"
     )
     assert moved_ballot.election_id == "local.stroud.2030-01-01"
+
+
+def test_set_date_baseline_updates_timetable():
+    ballot = StockLocalBallotBuilder().build()
+    original_timetable = ballot.timetable
+    builder = RootBuilder().with_ballot(ballot)
+
+    builder.set_date_baseline("2030-01-01")
+
+    moved_ballot = builder.build().dates[0].ballots[0]
+    expected_timetable = get_default_timetable(
+        moved_ballot.ballot_paper_id, "2030-01-01", False
+    )
+    assert moved_ballot.timetable == expected_timetable
+    assert moved_ballot.timetable != original_timetable
 
 
 def test_set_date_baseline_accepts_date_object():
