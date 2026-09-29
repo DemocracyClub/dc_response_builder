@@ -104,12 +104,12 @@ class RootBuilder(AbstractBuilder[RootModel]):
             existing_dates.append(date_model)
         else:
             existing_dates.append(date_model)
-        self.set("dates", existing_dates)
+        self.set("dates", sorted(existing_dates, key=lambda d: d.date))
         return self
 
     def with_ballot(self, ballot_model: Ballot):
         """
-        Convince class for adding a ballot inside a date object.
+        Convenience method for adding a ballot inside a date object.
 
         The date of the ballot is added to the dates array
         """
@@ -180,6 +180,9 @@ class RootBuilder(AbstractBuilder[RootModel]):
         2022-02-17
 
         """
+        # imported here to avoid a circular import with builders.ballots
+        from response_builder.v1.builders.ballots import get_default_timetable
+
         if self._values.get("address_picker"):
             return self
 
@@ -207,4 +210,10 @@ class RootBuilder(AbstractBuilder[RootModel]):
                 parts = ballot.election_id.split(".")
                 parts[-1] = str(updated_date)
                 ballot.election_id = ".".join(parts)
+
+                ballot.timetable = get_default_timetable(
+                    ballot.ballot_paper_id,
+                    updated_date,
+                    bool(ballot.requires_voter_id),
+                )
         return self

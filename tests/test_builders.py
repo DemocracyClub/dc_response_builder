@@ -1,9 +1,13 @@
+import datetime as dt
 import importlib
 
 import pytest
 from uk_election_ids.datapackage import ELECTION_TYPES, VOTING_SYSTEMS
 
-from response_builder.v1.builders.ballots import StockLocalBallotBuilder
+from response_builder.v1.builders.ballots import (
+    StockLocalBallotBuilder,
+    get_default_timetable,
+)
 from response_builder.v1.builders.base import AbstractBuilder, RootBuilder
 from response_builder.v1.generated_responses.polling_stations import (
     WITHOUT_MAP_POLLING_STATION,
@@ -56,6 +60,84 @@ def test_address_picker_cant_have_ballots():
     built = builder.build()
     assert built.address_picker
     assert not built.dates
+
+
+def test_set_date_baseline_moves_date_and_ballot_fields():
+    ballot = StockLocalBallotBuilder().build()
+    builder = RootBuilder().with_ballot(ballot)
+
+    builder.set_date_baseline("2030-01-01")
+
+    built = builder.build()
+    assert built.dates[0].date == "2030-01-01"
+    moved_ballot = built.dates[0].ballots[0]
+    assert moved_ballot.poll_open_date == dt.date(2030, 1, 1)
+    assert (
+        moved_ballot.ballot_paper_id == "local.stroud.stroud-slade.2030-01-01"
+    )
+    assert moved_ballot.election_id == "local.stroud.2030-01-01"
+
+
+def test_set_date_baseline_updates_timetable():
+    ballot = StockLocalBallotBuilder().build()
+    original_timetable = ballot.timetable
+    builder = RootBuilder().with_ballot(ballot)
+
+    builder.set_date_baseline("2030-01-01")
+
+    moved_ballot = builder.build().dates[0].ballots[0]
+    expected_timetable = get_default_timetable(
+        moved_ballot.ballot_paper_id, "2030-01-01", False
+    )
+    assert moved_ballot.timetable == expected_timetable
+    assert moved_ballot.timetable != original_timetable
+
+
+def test_set_date_baseline_accepts_date_object():
+    ballot = StockLocalBallotBuilder().build()
+    builder = RootBuilder().with_ballot(ballot)
+
+    builder.set_date_baseline(dt.date(2030, 1, 1))
+
+    assert builder.build().dates[0].date == "2030-01-01"
+
+
+def test_set_date_baseline_preserves_gap_between_multiple_dates():
+    ballot1 = StockLocalBallotBuilder().build()
+    ballot2 = (
+        StockLocalBallotBuilder()
+        .with_ballot_paper_id("local.stroud.stroud-slade.2024-06-06")
+        .with_election_id("local.stroud.2024-06-06")
+        .build()
+    )
+    builder = RootBuilder().with_multiple_ballots([ballot1, ballot2])
+
+    builder.set_date_baseline("2030-01-01")
+
+    built = builder.build()
+    assert built.dates[0].date == "2030-01-01"
+    # original gap between ballot1 and ballot2 was 35 days
+    assert built.dates[1].date == "2030-02-05"
+
+
+def test_set_date_baseline_is_noop_with_address_picker():
+    builder = (
+        RootBuilder()
+        .with_ballot(StockLocalBallotBuilder().build())
+        .with_address_picker()
+    )
+
+    result = builder.set_date_baseline("2030-01-01")
+
+    assert result is builder
+    assert builder.build().dates == []
+
+
+def test_set_date_baseline_raises_without_dates():
+    builder = RootBuilder()
+
+    with pytest.raises(ValueError):
+        builder.set_date_baseline("2030-01-01")
 
 
 def generate_expected_data():
